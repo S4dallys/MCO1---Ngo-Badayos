@@ -23,10 +23,6 @@ public class Slot {
         return item;
     }
 
-    public int getNextSlotNo() {
-        return nextSlotNo;
-    }
-
     public void setItem(Item item) {
         this.item = item;
     }
