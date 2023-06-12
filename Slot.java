@@ -1,6 +1,6 @@
 public class Slot {
     private int slotNo;
-    private Item item;
+    private Item item = null;
     private static int nextSlotNo = 0;
 
     public Slot(Item item) {

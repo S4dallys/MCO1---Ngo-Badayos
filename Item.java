@@ -33,7 +33,7 @@ public class Item {
         return stock;
     }
 
-    private boolean isAvailable(){
+    public boolean isAvailable(){
         if(stock > 0)
             return true;
         else
