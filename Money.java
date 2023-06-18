@@ -1,3 +1,15 @@
+/*  
+USAGE: 
+1.) !! Declare static Money.setDenomenations() first before using class. !!
+2.) calculateTransaction() takes in bankTotal: Money, given: Money, and price: int 
+    NOTE: function always returns a new class 
+    returns given (clone) if a. given is less than price b. VM can't return exact change
+    returns change if all goes well
+3.) insertMoney() returns false if denomenation is invalid so no need for extra logic there
+4.) static getIntTotal() can be used to get the total monetary value of a money class, probably useful
+5.) clearMoney() sets Money.money to zero, can be used for canceling purchases
+*/
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Collections;
@@ -5,41 +17,51 @@ import java.util.ArrayList;
 
 public class Money {
     private LinkedHashMap<Integer, Integer> money = new LinkedHashMap<>();
-    private ArrayList<Integer> acceptedDenomenations;
+    private static ArrayList<Integer> acceptedDenomenations;
 
-    // public static void main(String[] args) {
-    //     ArrayList<Integer> d = new ArrayList<>();
-    //     d.add(1);
-    //     d.add(5);
-    //     d.add(10);
-    //     d.add(20);
-    //     d.add(50);
+    // use for testing
+    /* 
+    public static void main(String[] args) {
+        ArrayList<Integer> d = new ArrayList<>();
+        d.add(1);
+        d.add(5);
+        d.add(10);
+        d.add(20);
+        d.add(50);
 
-    //     Money m = new Money(d);
-    //     Money bank = new Money(d);
+        Money.setDenomenations(d);
 
-    //     bank.insertMoney(5);
+        Money m = new Money();
+        Money bank = new Money();
 
-    //     m.insertMoney(10);
-    //     m.insertMoney(20);
-    //     m.insertMoney(5);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
+        bank.insertMoney(5);
 
-    //     System.out.println("GIVEN " + Money.getIntTotal(m) + "\nBANK: " + Money.getIntTotal(bank));
-    //     System.out.println("\nCHANGE: " + Money.giveChange(bank, m, 114).money);
-    //     System.out.println("\nUPDATED BANK " + getIntTotal(bank));
-    // }
+        m.insertMoney(10);
+        m.insertMoney(20);
+        m.insertMoney(20);
+        m.insertMoney(20);
+        m.insertMoney(20);
+        m.insertMoney(20);
 
-    public Money(ArrayList<Integer> acceptedDenomenations) {
-        Collections.sort(acceptedDenomenations, Collections.reverseOrder());
-        this.acceptedDenomenations = acceptedDenomenations;
+        System.out.println("GIVEN " + Money.getIntTotal(m) + "\nBANK: " + Money.getIntTotal(bank));
+        System.out.println("\nCHANGE: " + Money.calculateTransaction(bank, m, 105).money);
+        System.out.println("\nUPDATED BANK " + getIntTotal(bank));
+    }
+    */
+    
 
+    public Money() {
+        if (acceptedDenomenations == null) throw new NullPointerException("Please initialize accepted Money denomenations using:\nMoney.setDenomenations()");
+
+        // init linkedhashmap
         for (Integer bill : acceptedDenomenations) {
             this.money.put(bill, 0);
         }
+    }
+
+    public static void setDenomenations(ArrayList<Integer> denomenations) {
+        Collections.sort(denomenations, Collections.reverseOrder());
+        acceptedDenomenations = denomenations;
     }
 
     public LinkedHashMap<Integer, Integer> getMoney() {
@@ -48,11 +70,10 @@ public class Money {
 
     // returns false if value is invalid
     public boolean insertMoney(int amount) {
-        if (!isDenomenationValid(amount)) 
+        if (!isValidBill(amount)) 
             return false;
 
-        int val = money.getOrDefault(amount, 0);
-        money.put(amount, val + 1);
+        money.put(amount, money.get(amount) + 1);
         return true;
     }
 
@@ -61,7 +82,7 @@ public class Money {
     }
 
     // check if entered amount is in correct denomenation
-    private boolean isDenomenationValid(int amount) {
+    private boolean isValidBill(int amount) {
         return acceptedDenomenations.contains(amount);
     }
 
@@ -72,10 +93,10 @@ public class Money {
              (oldValue, newValue) -> oldValue + newValue);
     }
 
-    // returns change as money class or null if no change can be produced (not enough denomenations)
+    // returns change as money class if possible else returns given back : always returns a new money class
     public static Money calculateTransaction(Money bankTotal, Money given, int price) {
-        Money tempBank = new Money(given.acceptedDenomenations);
-        Money result = new Money(given.acceptedDenomenations);
+        Money tempBank = new Money();
+        Money result = new Money();
         
         mergeMoney(result, given);
         mergeMoney(tempBank, given);
@@ -95,7 +116,6 @@ public class Money {
         result.clearMoney();
 
         for (Map.Entry<Integer, Integer> entry : tempBank.money.entrySet()) {
-            System.out.println(tempBank.money);
             int bill = entry.getKey();
             int quantity = entry.getValue();
 
@@ -110,7 +130,7 @@ public class Money {
         // if vending machine doesn't have necessary denomenations to give change
         if (change != 0) {
             result.clearMoney();    
-            result.money.putAll(given.money);
+            mergeMoney(result, given);
             return result;
         };
 
@@ -118,6 +138,7 @@ public class Money {
         return result;
     }
 
+    // returns total monetary value of money
     public static int getIntTotal(Money money) {
         int result = 0;
         for (Map.Entry<Integer, Integer> entry : money.money.entrySet()) {
