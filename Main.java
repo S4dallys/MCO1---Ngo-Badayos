@@ -10,14 +10,14 @@ public class Main {
         // FOR TESTING
         vm = new VendingMachine("Curry");
         ArrayList<Slot> slots = new ArrayList<>();
-        Slot slot1 = new Slot("Carrots", 10, 15, 1);
-        Slot slot2 = new Slot("Indian Curry", 10, 20, 1);
-        Slot slot3 = new Slot("Japanese Curry", 10, 20, 1);
-        Slot slot4 = new Slot("Thai Curry", 10, 20, 1);
-        Slot slot5 = new Slot("Chilies", 10, 10, 1);
-        Slot slot6 = new Slot("Tonkatsu", 10, 50, 1);
-        Slot slot7 = new Slot("Eggplant", 10, 15, 1);
-        Slot slot8 = new Slot("Scrambled Eggs", 10, 20, 1);
+        Slot slot1 = new Slot("Carrots", 10, 15, 50, 1);
+        Slot slot2 = new Slot("Indian Curry", 10, 20, 50, 2);
+        Slot slot3 = new Slot("Japanese Curry", 10, 20, 50, 3);
+        Slot slot4 = new Slot("Thai Curry", 10, 20, 50, 4);
+        Slot slot5 = new Slot("Chilies", 10, 10, 50, 5);
+        Slot slot6 = new Slot("Tonkatsu", 10, 50, 50, 6);
+        Slot slot7 = new Slot("Eggplant", 10, 15, 50, 7);
+        Slot slot8 = new Slot("Scrambled Eggs", 10, 20, 50, 8);
         slots.add(slot1);
         slots.add(slot2);
         slots.add(slot3);
@@ -79,7 +79,7 @@ public class Main {
                     loop = false;
                     break;
                 case 2:
-                    //createSpecial();
+                    createSpecial(sc);
                     loop = false;
                     break;
                 case 3:
@@ -102,15 +102,15 @@ public class Main {
             sc.nextLine();
             switch (choice) {
                 case 1:
-                    if(!vm.checkEmpty()) 
-                        testVending(sc);
+                    if(!vm.checkEmpty(vm.getSlots())) 
+                        vendingActions(sc);
                     else {
                         System.out.println("There are no items at the moment.");
                         System.out.println("Please try again later.");
                     }
                     break;
                 case 2:
-                    testMaintenance(sc);
+                    maintenance(sc);
                     break;
                 case 3:
                     return;
@@ -126,9 +126,13 @@ public class Main {
         vm = new VendingMachine(vmName);
     }
 
-    private static void testVending(Scanner sc) {
+    private static void createSpecial(Scanner sc) {
+        System.out.println("That option is not available at the moment.");
+    }
+
+    private static void vendingActions(Scanner sc) {
         boolean loop = true;
-        int choice, restock;
+        int choice, slotNo, itemAmt;
         do {
             System.out.println("\t[1] Pick Item");
             System.out.println("\t[2] Purchase Item");
@@ -138,6 +142,14 @@ public class Main {
             sc.nextLine();
             switch (choice) {
                 case 1: 
+                    System.out.print("Enter the slot number of the item you pick: ");
+                    slotNo = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter the amount to be added to your meal: ");
+                    itemAmt = sc.nextInt();
+                    sc.nextLine();
+                    vm.addSlot(slotNo, itemAmt);
+                    vm.viewSelected(itemAmt);
                     break;
                 case 2:
                     break;
@@ -149,7 +161,7 @@ public class Main {
         }while(loop);
     }
 
-    private static void testMaintenance(Scanner sc) {
+    private static void maintenance(Scanner sc) {
         boolean loop = true;
         int choice, stock, slotNo;
         float price;
@@ -204,7 +216,7 @@ public class Main {
         }while(loop);
     }
 
-    private static void vendingActions() {
+    public static void displayPrep() {
 
     }
 }

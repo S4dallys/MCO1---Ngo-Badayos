@@ -1,23 +1,20 @@
 public class Slot {
     private String name;
+    private final int minStock = 10;
     private int stock;
-    private float price;
+    private float price, kcal;
     private int slotNo;
 
     public Slot(String name, int slotNo) {
         this.name = name;
         this.slotNo = slotNo;
     }
-    public Slot(int stock) {
-        this.stock = stock;
-    }
-    public Slot(float price) {
-        this.price = price;
-    }
-    public Slot(String name, int stock, float price, int slotNo) {
+    
+    public Slot(String name, int stock, float price, float kcal, int slotNo) {
         this.name = name;
         this.stock = stock;
-        this. price = price;
+        this.price = price;
+        this.kcal = kcal;
         this.slotNo = slotNo;
     }
 
@@ -30,6 +27,12 @@ public class Slot {
     public int getStock() {
         return stock;
     }
+    public float getKcal() {
+        return kcal;
+    }
+    public int getSlotNo() {
+        return slotNo;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -39,5 +42,8 @@ public class Slot {
     }
     public void setStock(int stock) {
         this.stock = stock;
+    }
+    public void setKcal(float kcal) {
+        this.kcal = kcal;
     }
 }

@@ -2,22 +2,49 @@ import java.util.ArrayList;
 
 public class VendingMachine {
     private String vmName;
-    private final int requiredSlots = 8;
+    private final int minSlots = 8;
+    private int selectedCount = 0;
     private ArrayList<Slot> slots = new ArrayList<>();
+    private ArrayList<Slot> selectedSlots = new ArrayList<>();
     private Money money;
 
     public VendingMachine(String vmName) {
         this.vmName = vmName;
     }
 
+    public String getVmName() {
+        return vmName;
+    }
+
     public ArrayList<Slot> getSlots() {
         return slots;
+    }
+
+    public ArrayList<Slot> getSelectedSlots() {
+        return selectedSlots;
     }
 
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
     }
 
+    public void setSelectedSlots(ArrayList<Slot> selectedSlots) {
+        this.selectedSlots = selectedSlots;
+    }
+
+    // user selected slots
+    public void addSlot(int slotNo, int ordered) {
+        selectedSlots.add(getSlot(slotNo));
+        selectedSlots.get(selectedCount).setStock(ordered);
+        selectedCount++;
+    }
+    public void viewSelected(int ordered) {
+        for (Slot slot : selectedSlots) {
+            System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice() * ordered, slot.getKcal() * ordered);
+        }
+    }
+
+    // slots in machine
     public void addSlot(String name) {
         slots.add(new Slot(name, slots.size() + 1));
     }
@@ -52,11 +79,11 @@ public class VendingMachine {
 
     public void viewItems() {
         for (Slot slot : slots) {
-            System.out.printf("%s - %d - %.2f\n", slot.getName(), slot.getStock(), slot.getPrice());
+            System.out.printf("%s - %d in stock - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
         }
     }
 
-    public boolean checkEmpty() {
+    public boolean checkEmpty(ArrayList<Slot> slots) {
         for (Slot slot : slots) {
             if (slot.getStock() > 0) {
                 return false;
@@ -67,5 +94,12 @@ public class VendingMachine {
 
     private boolean isValidSlot(int slotNo) {
         return slotNo >= 1 && slotNo <= slots.size();
+    }
+
+    private boolean isAvailable(Slot slot) {
+        if(slot.getStock() == 0)
+            return false;
+        else
+            return true;
     }
 }
