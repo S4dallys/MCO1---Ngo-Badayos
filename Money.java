@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class Money {
     private LinkedHashMap<Integer, Integer> money = new LinkedHashMap<>();
-    private static ArrayList<Integer> acceptedDenomenations;
+    public static ArrayList<Integer> acceptedDenomenations;
 
     // use for testing
     /* 
@@ -48,6 +48,14 @@ public class Money {
         System.out.println("\nUPDATED BANK " + getIntTotal(bank));
     }
     */
+
+    // public static void main(String[] args) {
+    //     ArrayList<Integer> d = new ArrayList<>();
+    //     d.add(1); d.add(10); d.add(20); d.add(50); d.add(100);
+    //     Money.setDenomenations(d);
+    //     Money m = new Money();
+    //     System.out.println(m.getMoney());
+    // }
     
 
     public Money() {

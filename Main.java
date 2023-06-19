@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Main {
     private static VendingMachine vm;
     public static void main(String[] args) {
@@ -8,6 +9,14 @@ public class Main {
         // FOR TESTING
         // FOR TESTING
         // FOR TESTING
+        ArrayList<Integer> d = new ArrayList<>();
+        d.add(1); d.add(10); d.add(20); d.add(50); d.add(100);
+
+        Money.setDenomenations(d);
+
+        
+
+
         vm = new VendingMachine("Curry");
         ArrayList<Slot> slots = new ArrayList<>();
         Slot slot1 = new Slot("Carrots", 10, 15, 50, 1);
@@ -18,6 +27,7 @@ public class Main {
         Slot slot6 = new Slot("Tonkatsu", 10, 50, 50, 6);
         Slot slot7 = new Slot("Eggplant", 10, 15, 50, 7);
         Slot slot8 = new Slot("Scrambled Eggs", 10, 20, 50, 8);
+        Slot slot9 = new Slot("Test", 10, 20, 50, 9);
         slots.add(slot1);
         slots.add(slot2);
         slots.add(slot3);
@@ -26,11 +36,15 @@ public class Main {
         slots.add(slot6);
         slots.add(slot7);
         slots.add(slot8);
+        slots.add(slot9);
         vm.setSlots(slots);
+
+        InventoryManager im = new InventoryManager(vm);
+
         // FOR TESTING
         // FOR TESTING
         // FOR TESTING
-        start();
+        // start();
     }
 
     private static void start() {

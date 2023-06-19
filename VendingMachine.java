@@ -2,14 +2,19 @@ import java.util.ArrayList;
 
 public class VendingMachine {
     private String vmName;
-    private final int minSlots = 8;
     private int selectedCount = 0;
     private ArrayList<Slot> slots = new ArrayList<>();
     private ArrayList<Slot> selectedSlots = new ArrayList<>();
-    private Money money;
+    private Money bankTotal = new Money();
+    
+    final int MINSLOTS = 8;
 
     public VendingMachine(String vmName) {
         this.vmName = vmName;
+    }
+
+    public Money getBankTotal() {
+        return bankTotal;
     }
 
     public String getVmName() {
@@ -49,10 +54,11 @@ public class VendingMachine {
         slots.add(new Slot(name, slots.size() + 1));
     }
 
-    public void stockSlot(int stock, int slotNo) {
+    // adds to slot instead of setting
+    public void stockSlot(int slotNo, int stock) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
-            slot.setStock(stock);
+            slot.setStock(slot.getStock() + stock);
         } else {
             System.out.println("Invalid slot number.");
         }
