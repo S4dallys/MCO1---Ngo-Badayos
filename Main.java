@@ -1,10 +1,14 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
 
 
 public class Main {
     private static VendingMachine vm;
     private static Money cassette;
+
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
         // DECLARE OBJECTS HERE
         // FOR TESTING
@@ -43,10 +47,10 @@ public class Main {
         // FOR TESTING
         // FOR TESTING
         start();
+        sc.close();
     }
 
     private static void start() {
-        Scanner sc = new Scanner(System.in);
         boolean loop = true;
         String choice;
         do {
@@ -73,11 +77,10 @@ public class Main {
                     break;
             }
         }while(loop);
-        sc.close();
+        
     }
 
     private static VendingMachine create() {
-        Scanner sc = new Scanner(System.in);
         VendingMachine newVm = null;
         boolean loop = true;
         String choice;
@@ -106,11 +109,11 @@ public class Main {
             }
         }while(loop);
 
+        
         return newVm;
     }
 
     private static void test() {
-        Scanner sc = new Scanner(System.in);
         boolean loop = true;
         String choice;
         do {
@@ -141,16 +144,15 @@ public class Main {
             }
         }while(loop);
 
-        sc.close();
+        
     }
 
-    private static void initVendingMachine() {
-        Scanner sc = new Scanner(System.in);
+    private static boolean initVendingMachine() {
         String choice;
 
-        System.out.print("\t[1] Enter Name");
-        System.out.print("\t[2] Cancel");
-        System.out.print("\tPick: ");
+        System.out.println("\t[1] Enter Name");
+        System.out.println("\t[2] Cancel");
+        System.out.println("\tPick: ");
 
         choice = sc.nextLine();
 
@@ -163,42 +165,110 @@ public class Main {
                 break;
         }
 
-        sc.close();
+        
+
+        return (choice == "2") ? false : true;
     }
 
     private static boolean createRegular() {
-        Scanner sc = new Scanner(System.in);
         boolean loop = true;
-        int slotNo;
+        int slotNo = 0;
         String choice;
-        String subChoice;
-
-        initVendingMachine();
-
-        if(vm == null) return false;
+        
+        if (initVendingMachine() == false) return false;
 
         System.out.println("\t[1] Set Denomenations");
         System.out.println("\t[2] Cancel");
         System.out.println("\tPick: ");
 
-        // chocie
-        // switch(choice)
+        choice = sc.nextLine();
+        sc.nextLine();
+        while (loop) {
+            switch(choice) {
+                case "1":
+                    System.out.println("Please write each denomenation with a space in between (ex. 1 5 10 20)");
+                    
+                    ArrayList<Integer> denomenations = new ArrayList<>();
+                    String temp = sc.nextLine();
 
-        while (subChoice != "2") {
-            System.out.println("\t[" + slotNo + "] Add Item");
-            System.out.println("\t[2] Finish");
-            System.out.println("\t[3] Cancel");
+                    for (String i : temp.split(" ")) {
+                        denomenations.add(Integer.parseInt(i));
+                    }
+
+                    Money.setDenomenations(denomenations);
+                    loop = false;
+                    break;
+                case "2":
+                    
+                    return false;
+                default:
+                    break;
+            }
         }
 
+        loop = true;
+        ArrayList<Slot> newSlots = new ArrayList<>();
+        while (loop) {
+            System.out.println("Current items: " + newSlots.toString());
+
+            System.out.println("\t[1] Add Item " + (slotNo + 1));
+            System.out.println("\t[2] Add Starting Money");
+            System.out.println("\t[3] Finish");
+            System.out.println("\t[4] Cancel");
+
+            choice = sc.nextLine();
+
+            switch (choice) {
+                case "1":
+                    System.out.println("Item name: ");
+                    Slot newSlot = new Slot(sc.nextLine(), slotNo);
+
+                    System.out.println("Item price: ");
+                    newSlot.setPrice(sc.nextFloat());
+
+                    System.out.println("Item stock: ");
+                    newSlot.setPrice(sc.nextInt());
+
+                    System.out.println("Item kcal: ");
+                    newSlot.setPrice(sc.nextFloat());
+                    
+                    newSlots.add(newSlot);
+                    slotNo++;
+                    break;
+                case "2":
+                    System.out.println("Enter in order of denomenations: " + Money.getAcceptedDenomenations().toString());
+                    System.out.println("Ex. 5 5 5, would mean 5x First Denomenation, 5x Second Denomation, etc.");
+
+                    cassette = new Money();
+
+                    int k = 0;
+                    for (String i : sc.nextLine().split(" ")) {
+                        for (int j = 0; j < Integer.parseInt(i); j++)
+                            cassette.insertMoney(Money.getAcceptedDenomenations().get(k));
+                        k++;
+                    }                      
+                    break;
+                case "3":
+                    if (slotNo > 0) {vm.setSlots(newSlots); loop = false;}
+                    else System.out.println("No slots in Vending Machine, please add some.");
+                    break;
+                case "4":
+                    return false;
+                default:
+                    break;
+            }
+        }
+
+        
         return true;
     }
 
     private static boolean createSpecial() {
         System.out.println("That option is not available at the moment.");
+        return false;
     }
 
     private static void vendingActions() {
-        Scanner sc = new Scanner(System.in);
         boolean loop = true;
         String choice;
         int slotNo, itemAmt;
@@ -234,11 +304,10 @@ public class Main {
             }
         }while(loop);
 
-        sc.close();
+        
     }
 
     private static void maintenance() {
-        Scanner sc = new Scanner(System.in);
         boolean loop = true;
         String choice;
         int stock, slotNo;
@@ -304,7 +373,7 @@ public class Main {
             }
         }while(loop);
 
-        sc.close();
+        
     }
     
     public static void displayItems() {

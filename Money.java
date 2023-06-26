@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class Money {
     private LinkedHashMap<Integer, Integer> money = new LinkedHashMap<>();
-    public static ArrayList<Integer> acceptedDenomenations;
+    private static ArrayList<Integer> acceptedDenomenations;
 
     // use for testing
     
@@ -153,5 +153,9 @@ public class Money {
             result += entry.getKey() * entry.getValue();
         }
         return result;
+    }
+
+    public static ArrayList<Integer> getAcceptedDenomenations() {
+        return acceptedDenomenations;
     }
 }
