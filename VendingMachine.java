@@ -50,10 +50,11 @@ public class VendingMachine {
         if (selectedSlot == null) {
             selectedSlot = new Slot(originalSlot);
             selectedSlots.add(selectedSlot);
+            selectedSlots.get(selectedSlots.size()-1).setStock(ordered);
+        } else {
+            int currentStock = selectedSlot.getStock();
+            selectedSlot.setStock(currentStock + ordered);
         }
-
-        int currentStock = selectedSlot.getStock();
-        selectedSlot.setStock(currentStock + ordered);
 
         originalSlot.setStock(originalSlot.getStock() - ordered);
     }
