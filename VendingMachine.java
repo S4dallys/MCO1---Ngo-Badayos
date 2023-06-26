@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class VendingMachine {
     private String vmName;
-    private int selectedCount = 0;
     private ArrayList<Slot> slots = new ArrayList<>();
     private ArrayList<Slot> selectedSlots = new ArrayList<>();
     private Money bankTotal = new Money();
@@ -39,14 +38,24 @@ public class VendingMachine {
 
     // user selected slots
     public void addSlot(int slotNo, int ordered) {
-        selectedSlots.add(getSlot(slotNo));
-        selectedSlots.get(selectedCount).setStock(ordered);
-        selectedCount++;
-    }
-    public void viewSelected(int ordered) {
+        Slot selectedSlot = null;
+        Slot originalSlot = getSlot(slotNo);
+
         for (Slot slot : selectedSlots) {
-            System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice() * ordered, slot.getKcal() * ordered);
+            if (slot.getName().equals(originalSlot.getName())) {
+                selectedSlot = slot;
+            }
         }
+
+        if (selectedSlot == null) {
+            selectedSlot = new Slot(originalSlot);
+            selectedSlots.add(selectedSlot);
+        }
+
+        int currentStock = selectedSlot.getStock();
+        selectedSlot.setStock(currentStock + ordered);
+
+        originalSlot.setStock(originalSlot.getStock() - ordered);
     }
 
     // slots in machine
@@ -55,22 +64,23 @@ public class VendingMachine {
     }
 
     // adds to slot instead of setting
-    public void stockSlot(int slotNo, int stock) {
+    public boolean stockSlot(int slotNo, int stock) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setStock(slot.getStock() + stock);
+            return true;
         } else {
-            System.out.println("Invalid slot number.");
+            return false;
         }
     }
 
-    public void priceSlot(float price, int slotNo) {
+    public boolean priceSlot(float price, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setPrice(price);
-        } 
-        else {
-            System.out.println("Invalid slot number.");
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -80,12 +90,6 @@ public class VendingMachine {
         } 
         else {
             return null;
-        }
-    }
-
-    public void viewItems() {
-        for (Slot slot : slots) {
-            System.out.printf("%s - %d in stock - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
         }
     }
 
@@ -102,10 +106,11 @@ public class VendingMachine {
         return slotNo >= 1 && slotNo <= slots.size();
     }
 
-    private boolean isAvailable(Slot slot) {
-        if(slot.getStock() == 0)
-            return false;
-        else
-            return true;
+    public float getTotal() {
+        float sum = 0;
+        for(Slot slot : selectedSlots) {
+            sum += slot.getPrice() * slot.getStock();
+        }
+        return sum;
     }
 }

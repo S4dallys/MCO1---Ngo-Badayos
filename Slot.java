@@ -18,6 +18,15 @@ public class Slot {
         this.slotNo = slotNo;
     }
 
+    // copy constructor
+    public Slot(Slot original) {
+        this.name = original.name;
+        this.stock = original.stock;
+        this.price = original.price;
+        this.kcal = original.kcal;
+        this.slotNo = original.slotNo;
+    }
+
     public String getName() {
         return name;
     }
@@ -45,5 +54,11 @@ public class Slot {
     }
     public void setKcal(float kcal) {
         this.kcal = kcal;
+    }
+    public boolean isAvailable() {
+        if(stock == 0)
+            return false;
+        else
+            return true;
     }
 }

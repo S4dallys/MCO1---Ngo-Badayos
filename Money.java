@@ -20,7 +20,7 @@ public class Money {
     public static ArrayList<Integer> acceptedDenomenations;
 
     // use for testing
-    /* 
+    
     public static void main(String[] args) {
         ArrayList<Integer> d = new ArrayList<>();
         d.add(1);
@@ -47,7 +47,7 @@ public class Money {
         System.out.println("\nCHANGE: " + Money.calculateTransaction(bank, m, 105).money);
         System.out.println("\nUPDATED BANK " + getIntTotal(bank));
     }
-    */
+    
 
     // public static void main(String[] args) {
     //     ArrayList<Integer> d = new ArrayList<>();

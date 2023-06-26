@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     private static VendingMachine vm;
+    private static Money cassette;
     public static void main(String[] args) {
         // DECLARE OBJECTS HERE
         // FOR TESTING
@@ -14,12 +15,9 @@ public class Main {
 
         Money.setDenomenations(d);
 
-        
-
-
         vm = new VendingMachine("Curry");
         ArrayList<Slot> slots = new ArrayList<>();
-        Slot slot1 = new Slot("Carrots", 10, 15, 50, 1);
+        Slot slot1 = new Slot("Carrots", 0, 15, 50, 1);
         Slot slot2 = new Slot("Indian Curry", 10, 20, 50, 2);
         Slot slot3 = new Slot("Japanese Curry", 10, 20, 50, 3);
         Slot slot4 = new Slot("Thai Curry", 10, 20, 50, 4);
@@ -44,7 +42,7 @@ public class Main {
         // FOR TESTING
         // FOR TESTING
         // FOR TESTING
-        // start();
+        start();
     }
 
     private static void start() {
@@ -71,6 +69,7 @@ public class Main {
                 case 3:
                     return;
                 default:
+                    invalidMessage();
                     break;
             }
         }while(loop);
@@ -81,8 +80,8 @@ public class Main {
         boolean loop = true;
         int choice;
         do {
-            System.out.println("\t[1] Regular");
-            System.out.println("\t[2] Special");
+            System.out.println("\t[1] Regular Vending Machine");
+            System.out.println("\t[2] Special Vending Machine");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
             choice = sc.nextInt();
@@ -99,6 +98,7 @@ public class Main {
                 case 3:
                     return;
                 default:
+                    invalidMessage();
                     break;
             }
         }while(loop);
@@ -129,6 +129,7 @@ public class Main {
                 case 3:
                     return;
                 default:
+                    invalidMessage();
                     break;
             }
         }while(loop);
@@ -156,6 +157,7 @@ public class Main {
             sc.nextLine();
             switch (choice) {
                 case 1: 
+                    displayItems();
                     System.out.print("Enter the slot number of the item you pick: ");
                     slotNo = sc.nextInt();
                     sc.nextLine();
@@ -163,13 +165,16 @@ public class Main {
                     itemAmt = sc.nextInt();
                     sc.nextLine();
                     vm.addSlot(slotNo, itemAmt);
-                    vm.viewSelected(itemAmt);
+                    displaySelected();
                     break;
                 case 2:
+                    System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
+                    System.out.println("Insert money to pay: ");
                     break;
                 case 3:
                     return;
                 default:
+                    invalidMessage();
                     break;
             }
         }while(loop);
@@ -192,45 +197,79 @@ public class Main {
             choice = sc.nextInt();
             sc.nextLine();
             switch (choice) {
-                case 1:
-                    vm.viewItems();
+                case 1: // view items
+                    displayItems();
                     break;
-                case 2: // adds to current amount in stock, not replace
+                case 2: // add item
                     System.out.print("Enter name of item to add: ");
                     itemName = sc.nextLine();
                     System.out.println();
                     vm.addSlot(itemName);
                     break;
-                case 3:
+                case 3: // restocks items. Adds to current amount in stock, not replace
                     System.out.println("Enter slot number of item to stock:");
                     slotNo = sc.nextInt();
                     sc.nextLine();
                     System.out.println("How many would you like to stock?:");
                     stock = sc.nextInt();
                     sc.nextLine();
-                    vm.stockSlot(stock, slotNo);
+                    if(vm.stockSlot(stock, slotNo))
+                        //get out of loop
+                        successMessage("stock");
+                    else
+                        System.out.println("Invalid slot number."); 
                     break;
-                case 4:
-                    System.out.println("Enter slot number of item to price?:");
+                case 4: // set price
+                    System.out.println("Enter slot number of item to change price:");
                     slotNo = sc.nextInt();
                     sc.nextLine();
                     System.out.println("Enter a price to set:");
                     price = sc.nextFloat();
                     sc.nextLine();
-                    vm.priceSlot(price, slotNo);
-                case 5:
+                    if(vm.priceSlot(price, slotNo))
+                        //get out of loop
+                        successMessage("price");
+                    else
+                        System.out.println("Invalid slot number."); 
+                case 5: // collect payment
                     break;
-                case 6:
+                case 6: // replenish money
+                    System.out.println("Enter a denomination to replenish: ");
                     break;
                 case 7:
                     return;
                 default:
+                    invalidMessage();
                     break;
             }
         }while(loop);
     }
-
-    public static void displayPrep() {
-
+    
+    public static void displayItems() {
+        int i = 0;
+        for(Slot slot : vm.getSlots()) {
+            if(slot.isAvailable())
+                System.out.printf("[%d] %s - %d in stock - %.2f pesos - %.1f calories\n", i+1, slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
+            else
+                System.out.printf("[%d] %s - NOT AVAILABLE\n", i+1, slot.getName());
+            i++;
+        }
     }
+
+    public static void displaySelected() {
+        for (Slot slot : vm.getSelectedSlots()) {
+            System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice() * slot.getStock(), slot.getKcal() * slot.getStock());
+        }
+    }
+
+    private static void successMessage(String changed) {
+        System.out.printf("Successfully changed %s.\n",changed);
+    }
+    private static void invalidMessage() {
+        System.out.println("That is not an option. Please try again.");
+    }
+
+    // public static void displayPrep() {
+
+    // }
 }
