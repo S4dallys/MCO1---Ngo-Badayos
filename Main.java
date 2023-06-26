@@ -382,6 +382,8 @@ public class Main {
                     else
                         System.out.println("Invalid slot number."); 
                 case "5": // collect payment
+                    System.out.println("You took out: P" + Money.getIntTotal(cassette));
+                    cassette.clearMoney();
                     break;
                 case "6": // replenish money
                     System.out.print("Enter a denomination to replenish: ");
