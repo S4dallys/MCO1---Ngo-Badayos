@@ -48,25 +48,25 @@ public class Main {
     private static void start() {
         Scanner sc = new Scanner(System.in);
         boolean loop = true;
-        int choice;
+        String choice;
         do {
             System.out.println("\t[1] Create Vending Machine");
             System.out.println("\t[2] Vending Machine Menu");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = sc.nextLine();
+      
             switch (choice) {
-                case 1:
-                    create(sc);
+                case "1":
+                    create();
                     break;
-                case 2:
+                case "2":
                     if(vm != null)
-                        test(sc);
+                        test();
                     else
                         System.out.println("Vending Machine not created yet.");
                     break;
-                case 3:
+                case "3":
                     return;
                 default:
                     invalidMessage();
@@ -76,87 +76,141 @@ public class Main {
         sc.close();
     }
 
-    private static void create(Scanner sc) {
+    private static VendingMachine create() {
+        Scanner sc = new Scanner(System.in);
+        VendingMachine newVm = null;
         boolean loop = true;
-        int choice;
+        String choice;
         do {
             System.out.println("\t[1] Regular Vending Machine");
             System.out.println("\t[2] Special Vending Machine");
-            System.out.println("\t[3] Exit");
+            System.out.println("\t[3] Cancel");
             System.out.print("\tPick: ");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = sc.nextLine();
+
             switch (choice) {
-                case 1:
-                    createRegular(sc);
+                case "1":
+                    createRegular();
                     loop = false;
                     break;
-                case 2:
-                    createSpecial(sc);
+                case "2":
+                    createSpecial();
                     loop = false;
                     break;
-                case 3:
-                    return;
+                case "3":
+                    loop = false;
+                    break;
                 default:
                     invalidMessage();
                     break;
             }
         }while(loop);
+
+        return newVm;
     }
 
-    private static void test(Scanner sc) {
+    private static void test() {
+        Scanner sc = new Scanner(System.in);
         boolean loop = true;
-        int choice;
+        String choice;
         do {
             System.out.println("\t[1] Vending Features");
             System.out.println("\t[2] Maintenance");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = sc.nextLine();
+      
             switch (choice) {
-                case 1:
+                case "1":
                     if(!vm.checkEmpty(vm.getSlots())) 
-                        vendingActions(sc);
+                        vendingActions();
                     else {
                         System.out.println("There are no items at the moment.");
                         System.out.println("Please try again later.");
                     }
                     break;
-                case 2:
-                    maintenance(sc);
+                case "2":
+                    maintenance();
                     break;
-                case 3:
-                    return;
+                case "3":
+                    loop = false;
+                    break;
                 default:
                     invalidMessage();
                     break;
             }
         }while(loop);
+
+        sc.close();
     }
 
-    private static void createRegular(Scanner sc) {
-        System.out.print("Enter name of Vending Machine: ");
-        String vmName = sc.nextLine();
-        vm = new VendingMachine(vmName);
+    private static void initVendingMachine() {
+        Scanner sc = new Scanner(System.in);
+        String choice;
+
+        System.out.print("\t[1] Enter Name");
+        System.out.print("\t[2] Cancel");
+        System.out.print("\tPick: ");
+
+        choice = sc.nextLine();
+
+        switch(choice) {
+            case "1":
+                System.out.println("\tName: ");
+                vm = new VendingMachine(sc.nextLine());
+                break;
+            case "2":
+                break;
+        }
+
+        sc.close();
     }
 
-    private static void createSpecial(Scanner sc) {
+    private static boolean createRegular() {
+        Scanner sc = new Scanner(System.in);
+        boolean loop = true;
+        int slotNo;
+        String choice;
+        String subChoice;
+
+        initVendingMachine();
+
+        if(vm == null) return false;
+
+        System.out.println("\t[1] Set Denomenations");
+        System.out.println("\t[2] Cancel");
+        System.out.println("\tPick: ");
+
+        // chocie
+        // switch(choice)
+
+        while (subChoice != "2") {
+            System.out.println("\t[" + slotNo + "] Add Item");
+            System.out.println("\t[2] Finish");
+            System.out.println("\t[3] Cancel");
+        }
+
+        return true;
+    }
+
+    private static boolean createSpecial() {
         System.out.println("That option is not available at the moment.");
     }
 
-    private static void vendingActions(Scanner sc) {
+    private static void vendingActions() {
+        Scanner sc = new Scanner(System.in);
         boolean loop = true;
-        int choice, slotNo, itemAmt;
+        String choice;
+        int slotNo, itemAmt;
         do {
             System.out.println("\t[1] Pick Item");
             System.out.println("\t[2] Purchase Item");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = sc.nextLine();
+         
             switch (choice) {
-                case 1: 
+                case "1": 
                     displayItems();
                     System.out.print("Enter the slot number of the item you pick: ");
                     slotNo = sc.nextInt();
@@ -167,22 +221,27 @@ public class Main {
                     vm.addSlot(slotNo, itemAmt);
                     displaySelected();
                     break;
-                case 2:
+                case "2":
                     System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
                     System.out.println("Insert money to pay: ");
                     break;
-                case 3:
-                    return;
+                case "3":
+                    loop = false;
+                    break;
                 default:
                     invalidMessage();
                     break;
             }
         }while(loop);
+
+        sc.close();
     }
 
-    private static void maintenance(Scanner sc) {
+    private static void maintenance() {
+        Scanner sc = new Scanner(System.in);
         boolean loop = true;
-        int choice, stock, slotNo;
+        String choice;
+        int stock, slotNo;
         float price;
         String itemName;
         do {
@@ -194,19 +253,19 @@ public class Main {
             System.out.println("\t[6] Replenish Money");
             System.out.println("\t[7] Exit");
             System.out.print("\tPick: ");
-            choice = sc.nextInt();
+            choice = sc.nextLine();
             sc.nextLine();
             switch (choice) {
-                case 1: // view items
+                case "1": // view items
                     displayItems();
                     break;
-                case 2: // add item
+                case "2": // add item
                     System.out.print("Enter name of item to add: ");
                     itemName = sc.nextLine();
                     System.out.println();
                     vm.addSlot(itemName);
                     break;
-                case 3: // restocks items. Adds to current amount in stock, not replace
+                case "3": // restocks items. Adds to current amount in stock, not replace
                     System.out.println("Enter slot number of item to stock:");
                     slotNo = sc.nextInt();
                     sc.nextLine();
@@ -219,7 +278,7 @@ public class Main {
                     else
                         System.out.println("Invalid slot number."); 
                     break;
-                case 4: // set price
+                case "4": // set price
                     System.out.println("Enter slot number of item to change price:");
                     slotNo = sc.nextInt();
                     sc.nextLine();
@@ -231,18 +290,21 @@ public class Main {
                         successMessage("price");
                     else
                         System.out.println("Invalid slot number."); 
-                case 5: // collect payment
+                case "5": // collect payment
                     break;
-                case 6: // replenish money
+                case "6": // replenish money
                     System.out.println("Enter a denomination to replenish: ");
                     break;
-                case 7:
-                    return;
+                case "7":
+                    loop = false;
+                    break;
                 default:
                     invalidMessage();
                     break;
             }
         }while(loop);
+
+        sc.close();
     }
     
     public static void displayItems() {
