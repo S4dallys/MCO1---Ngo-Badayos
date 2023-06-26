@@ -21,6 +21,10 @@ public class Main {
 
         cassette = new Money();
         cassette.insertMoney(1);
+        cassette.insertMoney(10);
+        cassette.insertMoney(20);
+        cassette.insertMoney(50);
+        cassette.insertMoney(100);
 
         vm = new VendingMachine("Curry");
         ArrayList<Slot> slots = new ArrayList<>();
@@ -111,7 +115,6 @@ public class Main {
             }
         }while(loop);
 
-        
         return newVm;
     }
 
@@ -166,9 +169,6 @@ public class Main {
             case "2":
                 break;
         }
-
-        
-
         return (choice == "2") ? false : true;
     }
 
@@ -179,38 +179,37 @@ public class Main {
         
         if (initVendingMachine() == false) return false;
 
-        System.out.println("\t[1] Set Denomenations");
-        System.out.println("\t[2] Cancel");
-        System.out.println("\tPick: ");
+        do {
+            System.out.println("\t[1] Set Denominations");
+            System.out.println("\t[2] Cancel");
+            System.out.print("\tPick: ");
+            choice = sc.nextLine();
 
-        choice = sc.nextLine();
-        sc.nextLine();
-        while (loop) {
             switch(choice) {
                 case "1":
-                    System.out.println("Please write each denomenation with a space in between (ex. 1 5 10 20)");
+                    System.out.print("Please write each denomination with spaces in between (ex. 1 5 10 20): ");
                     
-                    ArrayList<Integer> denomenations = new ArrayList<>();
+                    ArrayList<Integer> denominations = new ArrayList<>();
                     String temp = sc.nextLine();
 
                     for (String i : temp.split(" ")) {
-                        denomenations.add(Integer.parseInt(i));
+                        denominations.add(Integer.parseInt(i));
                     }
 
-                    Money.setDenomenations(denomenations);
+                    Money.setDenomenations(denominations);
                     loop = false;
                     break;
                 case "2":
-                    
                     return false;
                 default:
+                    invalidMessage();
                     break;
             }
-        }
+        } while (loop);
 
         loop = true;
         ArrayList<Slot> newSlots = new ArrayList<>();
-        while (loop) {
+        do {
             System.out.println("Current items: " + newSlots.toString());
 
             System.out.println("\t[1] Add Item " + (slotNo + 1));
@@ -252,14 +251,14 @@ public class Main {
                     break;
                 case "3":
                     if (slotNo > 0) {vm.setSlots(newSlots); loop = false;}
-                    else System.out.println("No slots in Vending Machine, please add some.");
+                    else System.out.println("No slots in Vending Machine, please add.");
                     break;
                 case "4":
                     return false;
                 default:
                     break;
             }
-        }
+        } while (loop);
         return true;
     }
 
@@ -315,9 +314,10 @@ public class Main {
                             invalidMessage();
                         else
                             totalPayment += payment;
-                    } while(vm.getTotal() >= totalPayment);
+                    } while(vm.getTotal() > totalPayment);
                     System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getTotal()).getMoney());
                     vm.clearSelected();
+                    loop = false;
                     break;
                 case "3":
                     loop = false;
@@ -334,7 +334,7 @@ public class Main {
     private static void maintenance() {
         boolean loop = true;
         String choice;
-        int stock, slotNo;
+        int stock, slotNo, denomRep, denomStock;
         float price;
         String itemName;
         do {
@@ -347,7 +347,6 @@ public class Main {
             System.out.println("\t[7] Exit");
             System.out.print("\tPick: ");
             choice = sc.nextLine();
-            sc.nextLine();
             switch (choice) {
                 case "1": // view items
                     displayItems();
@@ -386,7 +385,13 @@ public class Main {
                 case "5": // collect payment
                     break;
                 case "6": // replenish money
-                    System.out.println("Enter a denomination to replenish: ");
+                    System.out.print("Enter a denomination to replenish: ");
+                    denomRep = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter amount to replenish in selected denomination: ");
+                    denomStock = sc.nextInt();
+                    sc.nextLine();
+                    vm.replenishMoney(cassette, denomRep, denomStock);
                     break;
                 case "7":
                     loop = false;
