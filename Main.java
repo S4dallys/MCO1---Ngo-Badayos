@@ -237,7 +237,7 @@ public class Main {
                     slotNo++;
                     break;
                 case "2":
-                    System.out.println("Enter in order of denomenations: " + Money.getAcceptedDenomenations().toString());
+                    System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
                     System.out.println("Ex. 5 5 5, would mean 5x First Denomenation, 5x Second Denomation, etc.");
 
                     cassette = new Money();
