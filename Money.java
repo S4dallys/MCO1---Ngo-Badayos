@@ -21,32 +21,32 @@ public class Money {
 
     // use for testing
     
-    public static void main(String[] args) {
-        ArrayList<Integer> d = new ArrayList<>();
-        d.add(1);
-        d.add(5);
-        d.add(10);
-        d.add(20);
-        d.add(50);
+    // public static void main(String[] args) {
+    //     ArrayList<Integer> d = new ArrayList<>();
+    //     d.add(1);
+    //     d.add(5);
+    //     d.add(10);
+    //     d.add(20);
+    //     d.add(50);
 
-        Money.setDenomenations(d);
+    //     Money.setDenomenations(d);
 
-        Money m = new Money();
-        Money bank = new Money();
+    //     Money m = new Money();
+    //     Money bank = new Money();
 
-        bank.insertMoney(5);
+    //     bank.insertMoney(5);
 
-        m.insertMoney(10);
-        m.insertMoney(20);
-        m.insertMoney(20);
-        m.insertMoney(20);
-        m.insertMoney(20);
-        m.insertMoney(20);
+    //     m.insertMoney(10);
+    //     m.insertMoney(20);
+    //     m.insertMoney(20);
+    //     m.insertMoney(20);
+    //     m.insertMoney(20);
+    //     m.insertMoney(20);
 
-        System.out.println("GIVEN " + Money.getIntTotal(m) + "\nBANK: " + Money.getIntTotal(bank));
-        System.out.println("\nCHANGE: " + Money.calculateTransaction(bank, m, 105).money);
-        System.out.println("\nUPDATED BANK " + getIntTotal(bank));
-    }
+    //     System.out.println("GIVEN " + Money.getIntTotal(m) + "\nBANK: " + Money.getIntTotal(bank));
+    //     System.out.println("\nCHANGE: " + Money.calculateTransaction(bank, m, 105).money);
+    //     System.out.println("\nUPDATED BANK " + getIntTotal(bank));
+    // }
     
 
     // public static void main(String[] args) {

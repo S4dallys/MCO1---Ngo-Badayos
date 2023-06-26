@@ -59,6 +59,10 @@ public class VendingMachine {
         originalSlot.setStock(originalSlot.getStock() - ordered);
     }
 
+    public void clearSelected() {
+        selectedSlots.clear();
+    }
+
     // slots in machine
     public void addSlot(String name) {
         slots.add(new Slot(name, slots.size() + 1));

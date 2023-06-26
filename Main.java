@@ -15,6 +15,9 @@ public class Main {
 
         Money.setDenomenations(d);
 
+        cassette = new Money();
+        cassette.insertMoney(1);
+
         vm = new VendingMachine("Curry");
         ArrayList<Slot> slots = new ArrayList<>();
         Slot slot1 = new Slot("Carrots", 0, 15, 50, 1);
@@ -72,7 +75,7 @@ public class Main {
                     invalidMessage();
                     break;
             }
-        }while(loop);
+        } while(loop);
         sc.close();
     }
 
@@ -146,8 +149,9 @@ public class Main {
     }
 
     private static void vendingActions(Scanner sc) {
-        boolean loop = true;
-        int choice, slotNo, itemAmt;
+        Money userMoney;
+        boolean loop = true, available = true;
+        int choice, slotNo, itemAmt, payment, totalPayment;
         do {
             System.out.println("\t[1] Pick Item");
             System.out.println("\t[2] Purchase Item");
@@ -164,12 +168,35 @@ public class Main {
                     System.out.print("Enter the amount to be added to your meal: ");
                     itemAmt = sc.nextInt();
                     sc.nextLine();
-                    vm.addSlot(slotNo, itemAmt);
-                    displaySelected();
+                    for(Slot slot : vm.getSlots())
+                        if(slot.getName().equals(vm.getSlot(slotNo).getName()) && slot.isAvailable()) {
+                            vm.addSlot(slotNo, itemAmt);
+                            displaySelected();
+                            available = true;
+                            break;
+                        } 
+                        else
+                            available = false;
+                    if(!available)
+                        System.out.println("That item is not available. Try again.");
                     break;
                 case 2:
+                    userMoney = new Money();
+                    payment = 0;
+                    totalPayment = 0;
                     System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
-                    System.out.println("Insert money to pay: ");
+                    do {
+                        System.out.printf("Payment inserted: %d\n", totalPayment);
+                        System.out.print("Insert money to pay: ");
+                        payment = sc.nextInt();
+                        sc.nextLine();
+                        if(!userMoney.insertMoney(payment))
+                            invalidMessage();
+                        else
+                            totalPayment += payment;
+                    } while(vm.getTotal() >= totalPayment);
+                    System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getTotal()).getMoney());
+                    vm.clearSelected();
                     break;
                 case 3:
                     return;
@@ -267,6 +294,9 @@ public class Main {
     }
     private static void invalidMessage() {
         System.out.println("That is not an option. Please try again.");
+    }
+    private static void warningMessage() {
+        System.out.println("Are you sure you want to exit? Your changes will be lost.");
     }
 
     // public static void displayPrep() {
