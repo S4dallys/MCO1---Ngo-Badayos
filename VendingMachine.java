@@ -118,4 +118,10 @@ public class VendingMachine {
         }
         return sum;
     }
+
+    public void replenishMoney(Money bank, int denomination, int stock) {
+        for(int i = 0; i < stock; i++) {
+            bank.insertMoney(denomination);
+        }
+    }
 }
