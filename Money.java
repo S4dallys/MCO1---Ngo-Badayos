@@ -6,7 +6,7 @@ USAGE:
     returns given (clone) if a. given is less than price b. VM can't return exact change
     returns change if all goes well
 3.) insertMoney() returns false if denomenation is invalid so no need for extra logic there
-4.) static getIntTotal() can be used to get the total monetary value of a money class, probably useful
+4.) static getDoubleTotal() can be used to get the total monetary value of a money class, probably useful
 5.) clearMoney() sets Money.money to zero, can be used for canceling purchases
 */
 
@@ -79,17 +79,17 @@ public class Money {
         mergeMoney(tempBank, given);
         mergeMoney(tempBank, bankTotal);
         
-        double intGiven = getIntTotal(given);
+        double doubleGiven = getDoubleTotal(given);
 
         // if given is less than price or vending machine doesn't have enough money
-        if (intGiven < price) return result; 
-        else if (intGiven - price == 0) {
+        if (doubleGiven < price) return result; 
+        else if (doubleGiven - price == 0) {
             mergeMoney(bankTotal, given);
             result.clearMoney(); 
             return result;
         } // if no change is necessary
 
-        double change = intGiven - price;
+        double change = doubleGiven - price;
         result.clearMoney();
 
         for (Map.Entry<Double, Integer> entry : tempBank.money.entrySet()) {
@@ -116,7 +116,7 @@ public class Money {
     }
 
     // returns total monetary value of money
-    public static double getIntTotal(Money money) {
+    public static double getDoubleTotal(Money money) {
         double result = 0;
         for (Map.Entry<Double, Integer> entry : money.money.entrySet()) {
             result += entry.getKey() * entry.getValue();

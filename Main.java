@@ -288,7 +288,7 @@ public class Main {
                                         Integer.parseInt(parsedInput[i]));
                             }
                             newVm.setBankTotal(tempCassette);
-                            System.out.println("You added: P" + Money.getIntTotal(tempCassette));
+                            System.out.println("You added: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
                         } catch (InputMismatchException e) {
@@ -509,7 +509,7 @@ public class Main {
                     // casette - im.invemtroryStock
                     break;
                 case "6":
-                    System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
+                    System.out.println("You took out: P" + Money.getDoubleTotal(vm.getBankTotal()));
                     vm.getBankTotal().clearMoney();
                     im.setTotalProfit(0);
                     break;
@@ -540,7 +540,7 @@ public class Main {
                             }
 
                             Money.mergeMoney(vm.getBankTotal(), tempCassette);
-                            System.out.println("You added: P" + Money.getIntTotal(tempCassette));
+                            System.out.println("You added: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
                         } catch (InputMismatchException e) {
@@ -553,7 +553,7 @@ public class Main {
                 case "8":
                     System.out.println("\tYour transaction summary since last reset: ");
                     System.out.printf("\tYour total profit is: P%.2f\n\n", im.getTotalProfit());
-                    System.out.printf("\tCurrent Balance: P%.2f\n\n", Money.getIntTotal(vm.getBankTotal()));
+                    System.out.printf("\tCurrent Balance: P%.2f\n\n", Money.getDoubleTotal(vm.getBankTotal()));
                     im.printInventoryLost();
 
                     String[] options3 = { "Reset trackers" };
