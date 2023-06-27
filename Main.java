@@ -287,6 +287,7 @@ public class Main {
                                 );
                             }
                             newVm.setBankTotal(tempCassette);
+                            System.out.println("You added: P" + Money.getIntTotal(tempCassette));
 
                             invalid = false;
                         }
@@ -527,6 +528,8 @@ public class Main {
                             }
 
                             Money.mergeMoney(vm.getBankTotal(), tempCassette);
+                            System.out.println("You added: P" + Money.getIntTotal(tempCassette));
+
 
                             invalid = false;
                         }
