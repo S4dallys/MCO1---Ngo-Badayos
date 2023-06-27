@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.HashSet;
 
@@ -249,7 +250,11 @@ public class Main {
 
                             sc.nextLine();
                         }
-                        catch (Exception e) {System.out.println("Error, Try again!"); sc.nextLine(); continue;}
+                        catch (Exception e) {
+                            errorMessage(); 
+                            sc.nextLine(); 
+                            continue;
+                        }
 
                         invalid = false;
                         
@@ -272,7 +277,7 @@ public class Main {
                         int inputLen = parsedInput.length;
 
                         if (inputLen > Money.getAcceptedDenomenations().size()) {
-                            System.out.println("Error, try again!");
+                            errorMessage(); 
                             continue;
                         }
                         
@@ -285,7 +290,9 @@ public class Main {
                             }
                             cassette = tempCassette;
                         }
-                        catch (Exception e) {System.out.println("Error, try again!");}
+                        catch (Exception e) {
+                            errorMessage();
+                        }
 
                     } while (cassette == null);
 
@@ -313,62 +320,71 @@ public class Main {
         String[] options = {"Pick Item", "Purchase Item"};
         int slotNo, itemAmt, totalPayment, payment;
         do {
-            displayOptions(options);
-            choice = sc.nextLine();
-         
-            switch (choice) {
-                case "1": 
-                    displayItems();
-                    System.out.print("Enter the slot number of the item you pick: ");
-                    slotNo = sc.nextInt();
-                    sc.nextLine();
-                    // FOR SPECIAL:
-                    // System.out.print("Enter the amount to be added to your meal: ");
-                    // itemAmt = sc.nextInt();
-                    // sc.nextLine();
-                    for(Slot slot : vm.getSlots())
-                        if(slot.getName().equals(vm.getSlot(slotNo).getName()) && slot.isAvailable()) {
-                            // FOR SPECIAL:
-                            // vm.addSlot(slotNo, itemAmt);
-                            // displaySelected();
-                            vm.setSelectedSlot(vm.getSlot(slotNo));
-                            available = true;
-                            break;
-                        } 
-                        else
-                            available = false;
-                    if(!available)
-                        System.out.println("That item is not available. Try again.");
-                    break;
-                case "2":
-                    userMoney = new Money();
-                    payment = 0;
-                    totalPayment = 0;
-                    // FOR SPECIAL
-                    // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
-                    System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
-                    do {
-                        System.out.printf("Payment inserted: %d\n", totalPayment);
-                        System.out.print("Insert money to pay: ");
-                        payment = sc.nextInt();
+            try {
+                displayOptions(options);
+                choice = sc.nextLine();
+            
+                switch (choice) {
+                    case "1": 
+                        displayItems();
+                        System.out.print("Enter the slot number of the item you pick: ");
+                        slotNo = sc.nextInt();
                         sc.nextLine();
-                        if(!userMoney.insertMoney(payment))
-                            invalidMessage();
-                        else
-                            totalPayment += payment;
-                    } while(vm.getTotal() > totalPayment);
-                    System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
-                    vm.setSelectedSlot(null);
-                    // FOR SPECIAL
-                    // vm.clearSelected();
-                    loop = false;
-                    break;
-                case "3":
-                    loop = false;
-                    break;
-                default:
-                    invalidMessage();
-                    break;
+                        // FOR SPECIAL:
+                        // System.out.print("Enter the amount to be added to your meal: ");
+                        // itemAmt = sc.nextInt();
+                        // sc.nextLine();
+                        for(Slot slot : vm.getSlots())
+                            if(slot.getName().equals(vm.getSlot(slotNo).getName()) && slot.isAvailable()) {
+                                // FOR SPECIAL:
+                                // vm.addSlot(slotNo, itemAmt);
+                                // displaySelected();
+                                vm.setSelectedSlot(vm.getSlot(slotNo));
+                                available = true;
+                                break;
+                            } 
+                            else
+                                available = false;
+                        if(!available)
+                            System.out.println("That item is not available. Try again.");
+                        break;
+                    case "2":
+                        userMoney = new Money();
+                        payment = 0;
+                        totalPayment = 0;
+                        // FOR SPECIAL
+                        // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
+                        System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
+                        do {
+                            System.out.printf("Payment inserted: %d\n", totalPayment);
+                            System.out.print("Insert money to pay: ");
+
+                            try {
+                                payment = sc.nextInt();
+                                sc.nextLine();
+                                if(!userMoney.insertMoney(payment))
+                                    invalidMessage();
+                                else
+                                    totalPayment += payment;
+                            } catch (InputMismatchException e) {
+                                invalidMessage();
+                            }
+                        } while(vm.getTotal() > totalPayment);
+                        System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
+                        vm.setSelectedSlot(null);
+                        // FOR SPECIAL
+                        // vm.clearSelected();
+                        loop = false;
+                        break;
+                    case "3":
+                        loop = false;
+                        break;
+                    default:
+                        invalidMessage();
+                        break;
+                }
+            } catch (Exception e) {
+                errorMessage();
             }
         }while(loop);
 
@@ -376,69 +392,109 @@ public class Main {
     }
 
     private static void maintenance() {
-        boolean loop = true;
+        boolean loop = true, validInput;
         String choice;
         String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Payment", "Replenish Money"};
         int stock, slotNo, denomRep, denomStock;
         float price;
         String itemName;
         do {
-            displayOptions(options);
-            choice = sc.nextLine();
-            switch (choice) {
-                case "1": // view items
-                    displayItems();
-                    break;
-                case "2": // add item
-                    System.out.print("Enter name of item to add: ");
-                    itemName = sc.nextLine();
-                    System.out.println();
-                    vm.addSlot(itemName);
-                    break;
-                case "3": // restocks items. Adds to current amount in stock, not replace
-                    System.out.println("Enter slot number of item to stock:");
-                    slotNo = sc.nextInt();
-                    sc.nextLine();
-                    System.out.println("How many would you like to stock?:");
-                    stock = sc.nextInt();
-                    sc.nextLine();
-                    if(vm.stockSlot(stock, slotNo))
-                        //get out of loop
-                        successMessage("stock");
-                    else
-                        System.out.println("Invalid slot number."); 
-                    break;
-                case "4": // set price
-                    System.out.println("Enter slot number of item to change price:");
-                    slotNo = sc.nextInt();
-                    sc.nextLine();
-                    System.out.println("Enter a price to set:");
-                    price = sc.nextFloat();
-                    sc.nextLine();
-                    if(vm.priceSlot(price, slotNo))
-                        //get out of loop
-                        successMessage("price");
-                    else
-                        System.out.println("Invalid slot number."); 
-                case "5": // collect payment
-                    System.out.println("You took out: P" + Money.getIntTotal(cassette));
-                    cassette.clearMoney();
-                    break;
-                case "6": // replenish money
-                    System.out.print("Enter a denomination to replenish: ");
-                    denomRep = sc.nextInt();
-                    sc.nextLine();
-                    System.out.print("Enter amount to replenish in selected denomination: ");
-                    denomStock = sc.nextInt();
-                    sc.nextLine();
-                    vm.replenishMoney(cassette, denomRep, denomStock);
-                    break;
-                case "7":
-                    loop = false;
-                    break;
-                default:
-                    invalidMessage();
-                    break;
+            try {
+                displayOptions(options);
+                choice = sc.nextLine();
+                switch (choice) {
+                    case "1": // view items
+                        displayItems();
+                        break;
+                    case "2": // add item
+                        validInput = false;
+                        do{ 
+                            try {
+                                System.out.print("Enter name of item to add: ");
+                                itemName = sc.nextLine();
+                                vm.addSlot(itemName);
+                                validInput = true;
+                            } catch(InputMismatchException e) {
+                                errorMessage();
+                            }
+                        } while(!validInput);
+                        break;
+                    case "3": // restocks items. Adds to current amount in stock, not replace
+                        validInput = false;
+                        do{ 
+                            try {
+                                System.out.println("Enter slot number of item to stock:");
+                                slotNo = sc.nextInt();
+                                sc.nextLine();
+                        
+                                System.out.println("How many would you like to stock?:");
+                                stock = sc.nextInt();
+                                sc.nextLine();
+
+                                if(vm.stockSlot(stock, slotNo)) {
+                                    successMessage("stock");
+                                    validInput = true;
+                                }
+                                else
+                                    System.out.println("Invalid slot number."); 
+                            } catch(InputMismatchException e) {
+                                errorMessage();
+                            }
+                        } while(!validInput);
+                        break;
+                    case "4": // set price
+                        validInput = false;
+                        do{ 
+                            try {
+                                System.out.println("Enter slot number of item to change price:");
+                                slotNo = sc.nextInt();
+                                sc.nextLine();
+
+                                System.out.println("Enter a price to set:");
+                                price = sc.nextFloat();
+                                sc.nextLine();
+
+                                if(vm.priceSlot(price, slotNo)) {
+                                    successMessage("price");
+                                    validInput = true;
+                                }
+                                else
+                                    System.out.println("Invalid slot number."); 
+                            } catch(InputMismatchException e) {
+                                errorMessage();
+                            }
+                        } while(!validInput);
+                    case "5": // collect payment
+                        System.out.println("You took out: P" + Money.getIntTotal(cassette));
+                        cassette.clearMoney();
+                        break;
+                    case "6": // replenish money
+                        validInput = false;
+                        do{ 
+                            try {
+                                System.out.print("Enter a denomination to replenish: ");
+                                denomRep = sc.nextInt();
+                                sc.nextLine();
+
+                                System.out.print("Enter amount to replenish in selected denomination: ");
+                                denomStock = sc.nextInt();
+                                sc.nextLine();
+
+                                vm.replenishMoney(cassette, denomRep, denomStock);
+                            } catch(InputMismatchException e) {
+                                errorMessage();
+                            }
+                        } while(!validInput);
+                        break;
+                    case "7":
+                        loop = false;
+                        break;
+                    default:
+                        invalidMessage();
+                        break;
+                }
+            } catch (Exception e) {
+                errorMessage();
             }
         }while(loop);
 
@@ -487,6 +543,9 @@ public class Main {
     }
     private static void invalidMessage() {
         System.out.println("That is not an option. Please try again.");
+    }
+    private static void errorMessage() {
+        System.out.println("Error, try again!");
     }
     private static void warningMessage() {
         System.out.println("Are you sure you want to exit? Your changes will be lost.");
