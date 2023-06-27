@@ -450,11 +450,11 @@ public class Main {
                     validInput = false;
                     do{ 
                         try {
-                            System.out.println("Enter slot number of item to stock:");
+                            System.out.print("Enter slot number of item to stock:");
                             slotNo = sc.nextInt();
                             sc.nextLine();
                     
-                            System.out.println("How many would you like to stock?:");
+                            System.out.print("How many would you like to stock?:");
                             stock = sc.nextInt();
                             sc.nextLine();
 
@@ -474,11 +474,11 @@ public class Main {
                     validInput = false;
                     do{ 
                         try {
-                            System.out.println("Enter slot number of item to change price:");
+                            System.out.print("Enter slot number of item to change price:");
                             slotNo = sc.nextInt();
                             sc.nextLine();
 
-                            System.out.println("Enter a price to set:");
+                            System.out.print("Enter a price to set:");
                             price = sc.nextDouble();
                             sc.nextLine();
 
