@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Money.setDenomenations(new ArrayList<Integer>());
+        Money.setDenomenations(new ArrayList<Double>());
 
         start();
         sc.close();
@@ -188,11 +188,11 @@ public class Main {
                 do {
                     System.out.print("Please write each denomination with spaces in between (ex. 1 5 10 20): ");
 
-                    ArrayList<Integer> denominations = new ArrayList<>();
+                    ArrayList<Double> denominations = new ArrayList<>();
                     String temp = sc.nextLine();
                     try {
                         for (String i : temp.split(" ")) {
-                            denominations.add(Integer.parseInt(i));
+                            denominations.add(Double.parseDouble(i));
                         }
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid denomenations, Try again!");
@@ -324,7 +324,8 @@ public class Main {
         boolean loop = true, available = true;
         String choice;
         String[] options = { "Pick Item", "Purchase Item" };
-        int slotNo = 0, itemAmt, totalPayment, payment; // itemAmt is for Special VM
+        int slotNo = 0, itemAmt;
+        double totalPayment, payment; // itemAmt is for Special VM
         do {
 
             displayOptions(options);
@@ -383,11 +384,11 @@ public class Main {
                     // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
                     System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                     do {
-                        System.out.printf("Payment inserted: %d\n", totalPayment);
+                        System.out.printf("Payment inserted: %.2f\n", totalPayment);
                         System.out.print("Insert money to pay: ");
 
                         try {
-                            payment = sc.nextInt();
+                            payment = sc.nextDouble();
                             sc.nextLine();
                             if (!userMoney.insertMoney(payment))
                                 errorMessage();
@@ -399,7 +400,7 @@ public class Main {
                         }
                     } while (vm.getSelectedSlot().getPrice() > totalPayment);
                     System.out.println("Change: " + Money
-                            .calculateTransaction(vm.getBankTotal(), userMoney, (int) vm.getSelectedSlot().getPrice())
+                            .calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice())
                             .getMoney());
                     im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
                     Slot currentSlot = vm.getSlots().get(vm.currentSlotNo);
@@ -549,7 +550,8 @@ public class Main {
                     break;
                 case "8":
                     System.out.println("\tYour transaction summary since last reset: ");
-                    System.out.printf("\tYour total profit is: P%f\n\n", im.getTotalProfit());
+                    System.out.printf("\tYour total profit is: P%.2f\n\n", im.getTotalProfit());
+                    System.out.printf("\tCurrent Balance: P%.2f\n\n", Money.getIntTotal(vm.getBankTotal()));
                     im.printInventoryLost();
 
                     String[] options3 = { "Reset trackers" };
