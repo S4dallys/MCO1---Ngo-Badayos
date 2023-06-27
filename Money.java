@@ -85,6 +85,15 @@ public class Money {
         return true;
     }
 
+    // returns false if value is invalid
+    public boolean insertMoney(int amount, int freq) {
+        if (!isValidBill(amount)) 
+            return false;
+
+        money.put(amount, money.get(amount) + freq);
+        return true;
+    }
+
     public void clearMoney() {
         money.clear();
     }

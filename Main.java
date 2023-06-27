@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 
 public class Main {
     private static VendingMachine vm;
@@ -13,41 +15,16 @@ public class Main {
         // FOR TESTING
         // FOR TESTING
         // FOR TESTING
-        ArrayList<Integer> d = new ArrayList<>();
-        d.add(1); d.add(10); d.add(20); d.add(50); d.add(100);
+        ArrayList<Integer> defaultDenom = new ArrayList<Integer>();
+        defaultDenom.add(1);
+        defaultDenom.add(5);
+        defaultDenom.add(10);
+        defaultDenom.add(20);
+        defaultDenom.add(50);
 
-        Money.setDenomenations(d);
+        Money.setDenomenations(defaultDenom);
 
         cassette = new Money();
-        cassette.insertMoney(1);
-        cassette.insertMoney(10);
-        cassette.insertMoney(20);
-        cassette.insertMoney(50);
-        cassette.insertMoney(100);
-
-        vm = new VendingMachine("Curry");
-        ArrayList<Slot> slots = new ArrayList<>();
-        Slot slot1 = new Slot("Carrots", 0, 15, 50, 1);
-        Slot slot2 = new Slot("Indian Curry", 10, 20, 50, 2);
-        Slot slot3 = new Slot("Japanese Curry", 10, 20, 50, 3);
-        Slot slot4 = new Slot("Thai Curry", 10, 20, 50, 4);
-        Slot slot5 = new Slot("Chilies", 10, 10, 50, 5);
-        Slot slot6 = new Slot("Tonkatsu", 10, 50, 50, 6);
-        Slot slot7 = new Slot("Eggplant", 10, 15, 50, 7);
-        Slot slot8 = new Slot("Scrambled Eggs", 10, 20, 50, 8);
-        Slot slot9 = new Slot("Test", 10, 20, 50, 9);
-        slots.add(slot1);
-        slots.add(slot2);
-        slots.add(slot3);
-        slots.add(slot4);
-        slots.add(slot5);
-        slots.add(slot6);
-        slots.add(slot7);
-        slots.add(slot8);
-        slots.add(slot9);
-        vm.setSlots(slots);
-
-        InventoryManager im = new InventoryManager(vm);
 
         // FOR TESTING
         // FOR TESTING
@@ -64,7 +41,13 @@ public class Main {
             System.out.println("\t[2] Vending Machine Menu");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
+
             choice = sc.nextLine();
+            
+            if (!IsInChoices(choice, makeChoices(1, 3))) {
+                invalidMessage();
+                continue;
+            }
       
             switch (choice) {
                 case "1":
@@ -78,9 +61,6 @@ public class Main {
                     break;
                 case "3":
                     return;
-                default:
-                    invalidMessage();
-                    break;
             }
         } while(loop);
     }
@@ -96,6 +76,11 @@ public class Main {
             System.out.print("\tPick: ");
             choice = sc.nextLine();
 
+            if (!IsInChoices(choice, makeChoices(1, 3))) {
+                invalidMessage();
+                continue;
+            }
+
             switch (choice) {
                 case "1":
                     createRegular();
@@ -107,9 +92,6 @@ public class Main {
                     break;
                 case "3":
                     loop = false;
-                    break;
-                default:
-                    invalidMessage();
                     break;
             }
         }while(loop);
@@ -125,8 +107,14 @@ public class Main {
             System.out.println("\t[2] Maintenance");
             System.out.println("\t[3] Exit");
             System.out.print("\tPick: ");
+
             choice = sc.nextLine();
       
+            if (!IsInChoices(choice, makeChoices(1, 3))) {
+                invalidMessage();
+                continue;
+            }
+
             switch (choice) {
                 case "1":
                     if(!vm.checkEmpty(vm.getSlots())) 
@@ -142,9 +130,6 @@ public class Main {
                 case "3":
                     loop = false;
                     break;
-                default:
-                    invalidMessage();
-                    break;
             }
         }while(loop);
 
@@ -156,14 +141,15 @@ public class Main {
 
         System.out.println("\t[1] Enter Name");
         System.out.println("\t[2] Cancel");
-        System.out.println("\tPick: ");
+        System.out.print("\tPick: ");
 
         choice = sc.nextLine();
 
         switch(choice) {
             case "1":
-                System.out.println("\tName: ");
-                vm = new VendingMachine(sc.nextLine());
+                System.out.print("\tName: ");
+                String name = sc.nextLine();
+                vm = new VendingMachine(name);
                 break;
             case "2":
                 break;
@@ -184,6 +170,11 @@ public class Main {
             System.out.print("\tPick: ");
             choice = sc.nextLine();
 
+            if (!IsInChoices(choice, makeChoices(1, 3))) {
+                invalidMessage();
+                continue;
+            }
+
             switch(choice) {
                 case "1":
                     System.out.print("Please write each denomination with spaces in between (ex. 1 5 10 20): ");
@@ -200,9 +191,6 @@ public class Main {
                     break;
                 case "2":
                     return false;
-                default:
-                    invalidMessage();
-                    break;
             }
         } while (loop);
 
@@ -212,50 +200,92 @@ public class Main {
             System.out.println("Current items: " + newSlots.toString());
 
             System.out.println("\t[1] Add Item " + (slotNo + 1));
-            System.out.println("\t[2] Add Starting Money");
+            System.out.println("\t[2] Set Starting Money");
             System.out.println("\t[3] Finish");
             System.out.println("\t[4] Cancel");
 
             choice = sc.nextLine();
 
+            if (!IsInChoices(choice, makeChoices(1, 4))) {
+                invalidMessage();
+                continue;
+            }
+
             switch (choice) {
                 case "1":
-                    System.out.println("Item name: ");
-                    Slot newSlot = new Slot(sc.nextLine(), slotNo);
+                    boolean invalid = true;
+                    do {
+                        Slot newSlot;
 
-                    System.out.println("Item price: ");
-                    newSlot.setPrice(sc.nextFloat());
+                        try {
+                            String name;
+                            System.out.println("Item name: ");
+                            name = sc.nextLine();
 
-                    System.out.println("Item stock: ");
-                    newSlot.setPrice(sc.nextInt());
+                            newSlot = new Slot(name, slotNo);
 
-                    System.out.println("Item kcal: ");
-                    newSlot.setPrice(sc.nextFloat());
-                    
-                    newSlots.add(newSlot);
-                    slotNo++;
+                            System.out.println("Item price: ");
+                            newSlot.setPrice(sc.nextFloat());
+
+                            sc.nextLine();
+
+                            System.out.println("Item stock: ");
+                            newSlot.setStock(sc.nextInt());
+
+                            sc.nextLine();
+
+                            System.out.println("Item kcal: ");
+                            newSlot.setPrice(sc.nextFloat());
+
+                            sc.nextLine();
+                        }
+                        catch (Exception e) {System.out.println("Error, Try again!"); sc.nextLine(); continue;}
+
+                        invalid = false;
+                        
+                        newSlots.add(newSlot);
+                        slotNo++;
+                    } while (invalid);
+
                     break;
                 case "2":
-                    System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
-                    System.out.println("Ex. 5 5 5, would mean 5x First Denomenation, 5x Second Denomation, etc.");
+                    cassette = null;
+                    
+                    do {
+                        Money tempCassette = new Money();
+                        System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
+                        System.out.println("Ex. 5 4 5, would mean 5x First Denomenation, 4x Second Denomation, etc.");
 
-                    cassette = new Money();
+                        String input = sc.nextLine();
+                        String parsedInput[] = input.split(" ");
 
-                    int k = 0;
-                    for (String i : sc.nextLine().split(" ")) {
-                        for (int j = 0; j < Integer.parseInt(i); j++)
-                            cassette.insertMoney(Money.getAcceptedDenomenations().get(k));
-                        k++;
-                    }                      
+                        int inputLen = parsedInput.length;
+
+                        if (inputLen > Money.getAcceptedDenomenations().size()) {
+                            System.out.println("Error, try again!");
+                            continue;
+                        }
+                        
+                        try {
+                            for (int i = 0; i < inputLen; i++) {
+                                tempCassette.insertMoney(
+                                    Money.getAcceptedDenomenations().get(i), 
+                                    Integer.parseInt(parsedInput[i])
+                                );
+                            }
+                            cassette = tempCassette;
+                        }
+                        catch (Exception e) {System.out.println("Error, try again!");}
+
+                    } while (cassette == null);
+
                     break;
                 case "3":
-                    if (slotNo > 0) {vm.setSlots(newSlots); loop = false;}
-                    else System.out.println("No slots in Vending Machine, please add.");
+                    if (newSlots.size() >= 8) {vm.setSlots(newSlots); loop = false; displayItems();}
+                    else System.out.println("Not enough slots in Vending Machine (min = 8), please add.");
                     break;
                 case "4":
                     return false;
-                default:
-                    break;
             }
         } while (loop);
         return true;
@@ -436,4 +466,21 @@ public class Main {
     // public static void displayPrep() {
 
     // }
+
+    private static boolean IsInChoices(String input, String[] choices) {
+        for (String i : choices) 
+            if (i.equals(input)) return true;
+
+        return false;
+    }
+
+    private static String[] makeChoices(int start, int end) {
+        String[] choices = new String[end - start + 1];
+
+        for (int i = 0; i <= (end - start); i++) {
+            choices[i] = Integer.toString(start + i);
+        }
+
+        return choices;
+    }
 }
