@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class InventoryManager {
-    private int startingTotal;
     private ArrayList<Integer> inventoryStock = new ArrayList<>();
     private VendingMachine vm;
     private double totalProfit = 0;
@@ -15,8 +14,7 @@ public class InventoryManager {
 
         for (Slot slot : vm.getSlots())
             inventoryStock.add(slot.getStock());
-
-        this.startingTotal = Money.getIntTotal(vm.getBankTotal());
+        totalProfit = 0;
     }
 
     public void setTotalProfit(double totalProfit) {
@@ -30,7 +28,7 @@ public class InventoryManager {
         for (Slot slot : vm.getSlots())
             inventoryStock.add(slot.getStock());
 
-        this.startingTotal = Money.getIntTotal(vm.getBankTotal());
+        totalProfit = 0;
     }
 
     public void reconfigure(VendingMachine vm) {
@@ -40,7 +38,7 @@ public class InventoryManager {
         for (Slot slot : vm.getSlots())
             inventoryStock.add(slot.getStock());
 
-        this.startingTotal = Money.getIntTotal(vm.getBankTotal());
+        totalProfit = 0;
     }
 
     public VendingMachine getVm() {
@@ -49,7 +47,6 @@ public class InventoryManager {
 
     public double getTotalProfit() {
         return totalProfit;
-        //return Money.getIntTotal(vm.getBankTotal()) - startingTotal;
     }
 
     public LinkedHashMap<String, Integer> getInventoryLost() {
