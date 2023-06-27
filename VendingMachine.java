@@ -6,8 +6,9 @@ public class VendingMachine {
     private ArrayList<Slot> selectedSlots = new ArrayList<>();
     private Slot selectedSlot;
     private Money bankTotal;
+    int currentSlot;
     
-    final int MINSLOTS = 8;
+    final int minSlots = 8;
 
     public VendingMachine(String vmName) {
         this.vmName = vmName;
@@ -104,6 +105,7 @@ public class VendingMachine {
 
     public Slot getSlot(int slotNo) {
         if (isValidSlot(slotNo)) {
+            currentSlot = slotNo-1;
             return slots.get(slotNo - 1);
         } 
         else {
