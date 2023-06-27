@@ -378,9 +378,11 @@ public class Main {
                                 sc.nextLine();
                                 invalidMessage();
                             }
-                        } while(vm.getTotal() > totalPayment);
+                        } while(vm.getSelectedSlot().getPrice() > totalPayment);
                         System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
-                        vm.setSelectedSlot(null);
+                        Slot currentSlot = vm.getSlots().get(vm.currentSlot);
+                        currentSlot.setStock(currentSlot.getStock()-1);
+
                         // FOR SPECIAL
                         // vm.clearSelected();
                         loop = false;
