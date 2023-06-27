@@ -417,7 +417,7 @@ public class Main {
         boolean loop = true, validInput;
         String choice;
         String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Profit", "Collect All Money", "Replenish Money", "Get Transaction Summary"};
-        int stock, slotNo, denomRep, denomStock;
+        int stock, slotNo;
         double price;
         String itemName;
         do {
@@ -562,7 +562,6 @@ public class Main {
                         case "2":
                             break;
                     }
-                    // do something
                 case "9":
                     loop = false;
                     break;
