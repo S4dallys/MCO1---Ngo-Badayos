@@ -186,8 +186,9 @@ public class Main {
 
         loop = true;
         ArrayList<Slot> newSlots = new ArrayList<>();
-        String[] options2 = {"Add Item " + (slotNo + 1), "Add Starting Money", "Finish"};
+        String[] options2 = {"Add Item 1", "Add Starting Money", "Finish"};
         do {
+            options2[0] = "Add Item " + (slotNo + 1);
             System.out.println("\"Current items: \"" + newSlots.toString());
             displayOptions(options2);
             choice = sc.nextLine();
