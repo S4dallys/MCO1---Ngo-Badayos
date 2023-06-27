@@ -16,27 +16,27 @@ import java.util.Collections;
 import java.util.ArrayList;
 
 public class Money {
-    private LinkedHashMap<Integer, Integer> money = new LinkedHashMap<>();
-    private static ArrayList<Integer> acceptedDenomenations;
+    private LinkedHashMap<Double, Integer> money = new LinkedHashMap<>();
+    private static ArrayList<Double> acceptedDenomenations;
 
     public Money() {
         // init linkedhashmap
-        for (Integer bill : acceptedDenomenations) {
+        for (Double bill : acceptedDenomenations) {
             this.money.put(bill, 0);
         }
     }
 
-    public static void setDenomenations(ArrayList<Integer> denomenations) {
+    public static void setDenomenations(ArrayList<Double> denomenations) {
         Collections.sort(denomenations, Collections.reverseOrder());
         acceptedDenomenations = denomenations;
     }
 
-    public LinkedHashMap<Integer, Integer> getMoney() {
+    public LinkedHashMap<Double, Integer> getMoney() {
         return this.money;
     }
 
     // returns false if value is invalid
-    public boolean insertMoney(int amount) {
+    public boolean insertMoney(double amount) {
         if (!isValidBill(amount)) 
             return false;
 
@@ -45,7 +45,7 @@ public class Money {
     }
 
     // returns false if value is invalid
-    public boolean insertMoney(int amount, int freq) {
+    public boolean insertMoney(double amount, int freq) {
         if (!isValidBill(amount)) 
             return false;
 
@@ -54,24 +54,24 @@ public class Money {
     }
 
     public void clearMoney() {
-        for (Map.Entry<Integer, Integer> entry : money.entrySet())
+        for (Map.Entry<Double, Integer> entry : money.entrySet())
             entry.setValue(0);
     }
 
     // check if entered amount is in correct denomenation
-    private boolean isValidBill(int amount) {
+    private boolean isValidBill(double amount) {
         return acceptedDenomenations.contains(amount);
     }
 
     // merges two money classes into dest
     public static void mergeMoney(Money dest, Money source) {
-        for (Map.Entry<Integer, Integer> entry : source.money.entrySet())
+        for (Map.Entry<Double, Integer> entry : source.money.entrySet())
             dest.money.merge(entry.getKey(), entry.getValue(),
              (oldValue, newValue) -> oldValue + newValue);
     }
 
     // returns change as money class if possible else returns given back : always returns a new money class
-    public static Money calculateTransaction(Money bankTotal, Money given, int price) {
+    public static Money calculateTransaction(Money bankTotal, Money given, double price) {
         Money tempBank = new Money();
         Money result = new Money();
         
@@ -79,7 +79,7 @@ public class Money {
         mergeMoney(tempBank, given);
         mergeMoney(tempBank, bankTotal);
         
-        int intGiven = getIntTotal(given);
+        double intGiven = getIntTotal(given);
 
         // if given is less than price or vending machine doesn't have enough money
         if (intGiven < price) return result; 
@@ -89,15 +89,15 @@ public class Money {
             return result;
         } // if no change is necessary
 
-        int change = intGiven - price;
+        double change = intGiven - price;
         result.clearMoney();
 
-        for (Map.Entry<Integer, Integer> entry : tempBank.money.entrySet()) {
-            int bill = entry.getKey();
+        for (Map.Entry<Double, Integer> entry : tempBank.money.entrySet()) {
+            double bill = entry.getKey();
             int quantity = entry.getValue();
 
             if (bill <= change && quantity > 0) {
-                int numBills = Math.min(quantity, change / bill);
+                int numBills = (int) Math.min(quantity, change / bill);
                 change -= bill * numBills;
                 tempBank.money.put(bill, quantity - numBills);
                 result.money.put(bill, numBills);
@@ -115,33 +115,16 @@ public class Money {
         return result;
     }
 
-    public static Money subtractMoney(Money bankTotal, int divisor) {
-        Money result = new Money();
-        for (Map.Entry<Integer, Integer> entry : bankTotal.money.entrySet()) {
-            int bill = entry.getKey();
-            int quantity = entry.getValue();
-
-            if (bill <= divisor && quantity > 0) {
-                int numBills = Math.min(quantity, divisor / bill);
-                divisor -= bill * numBills;
-                bankTotal.money.put(bill, quantity - numBills);
-                result.money.put(bill, numBills);
-            }
-        }
-
-        return result;
-    }
-
     // returns total monetary value of money
-    public static int getIntTotal(Money money) {
-        int result = 0;
-        for (Map.Entry<Integer, Integer> entry : money.money.entrySet()) {
+    public static double getIntTotal(Money money) {
+        double result = 0;
+        for (Map.Entry<Double, Integer> entry : money.money.entrySet()) {
             result += entry.getKey() * entry.getValue();
         }
         return result;
     }
 
-    public static ArrayList<Integer> getAcceptedDenomenations() {
+    public static ArrayList<Double> getAcceptedDenomenations() {
         return acceptedDenomenations;
     }
 }
