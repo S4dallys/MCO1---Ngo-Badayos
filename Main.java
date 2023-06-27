@@ -501,8 +501,9 @@ public class Main {
                         }
                     } while (!validInput);
                 case "5":
-                    // do something
-                    // casette - im.invemtroryStock
+                    System.out.println(
+                        "You took out: P" + Money.getIntTotal(Money.subtractMoney(vm.getBankTotal(), im.getTotalProfit()))
+                        );
                     break;
                 case "6":
                     System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));

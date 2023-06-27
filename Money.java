@@ -154,6 +154,23 @@ public class Money {
         return result;
     }
 
+    public static Money subtractMoney(Money bankTotal, int divisor) {
+        Money result = new Money();
+        for (Map.Entry<Integer, Integer> entry : bankTotal.money.entrySet()) {
+            int bill = entry.getKey();
+            int quantity = entry.getValue();
+
+            if (bill <= divisor && quantity > 0) {
+                int numBills = Math.min(quantity, divisor / bill);
+                divisor -= bill * numBills;
+                bankTotal.money.put(bill, quantity - numBills);
+                result.money.put(bill, numBills);
+            }
+        }
+
+        return result;
+    }
+
     // returns total monetary value of money
     public static int getIntTotal(Money money) {
         int result = 0;
