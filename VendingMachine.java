@@ -7,7 +7,7 @@ public class VendingMachine {
     private Slot selectedSlot;
     private Money bankTotal = new Money();
     
-    final int MINSLOTS = 8;
+    final int minSlots = 8;
 
     public VendingMachine(String vmName) {
         this.vmName = vmName;

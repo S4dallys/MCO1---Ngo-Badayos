@@ -1,9 +1,10 @@
 public class Slot {
     private String name;
-    private final int minStock = 10;
     private int stock;
     private float price, kcal;
     private int slotNo;
+
+    final int minStock = 10;
 
     public Slot(String name, int slotNo) {
         this.name = name;

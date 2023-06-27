@@ -301,8 +301,13 @@ public class Main {
 
                     break;
                 case "3":
-                    if (newSlots.size() >= 8) {vm.setSlots(newSlots); loop = false; displayItems();}
-                    else System.out.println("Not enough slots in Vending Machine (min = 8), please add.");
+                    if (newSlots.size() >= vm.minSlots) {
+                        vm.setSlots(newSlots); 
+                        loop = false; 
+                        displayItems();
+                    }
+                    else 
+                        System.out.println("Not enough slots in Vending Machine (min = 8), please add.");
                     break;
                 case "4":
                     return false;
