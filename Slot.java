@@ -2,7 +2,7 @@ public class Slot {
     private String name;
     private final int minStock = 10;
     private int stock;
-    private float price, kcal;
+    private double price, kcal;
     private int slotNo;
 
     public Slot(String name, int slotNo) {
@@ -10,7 +10,7 @@ public class Slot {
         this.slotNo = slotNo;
     }
     
-    public Slot(String name, int stock, float price, float kcal, int slotNo) {
+    public Slot(String name, int stock, double price, double kcal, int slotNo) {
         this.name = name;
         this.stock = stock;
         this.price = price;
@@ -30,13 +30,13 @@ public class Slot {
     public String getName() {
         return name;
     }
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
     public int getStock() {
         return stock;
     }
-    public float getKcal() {
+    public double getKcal() {
         return kcal;
     }
     public int getSlotNo() {
@@ -46,13 +46,13 @@ public class Slot {
     public void setName(String name) {
         this.name = name;
     }
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
     public void setStock(int stock) {
         this.stock = stock;
     }
-    public void setKcal(float kcal) {
+    public void setKcal(double kcal) {
         this.kcal = kcal;
     }
     public boolean isAvailable() {

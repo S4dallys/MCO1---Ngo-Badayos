@@ -6,29 +6,14 @@ import java.util.HashSet;
 
 public class Main {
     private static VendingMachine vm;
-    private static Money cassette;
+    private static InventoryManager im;
 
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        // DECLARE OBJECTS HERE
-        // FOR TESTING
-        // FOR TESTING
-        // FOR TESTING
-        ArrayList<Integer> defaultDenom = new ArrayList<Integer>();
-        defaultDenom.add(1);
-        defaultDenom.add(5);
-        defaultDenom.add(10);
-        defaultDenom.add(20);
-        defaultDenom.add(50);
 
-        Money.setDenomenations(defaultDenom);
+        Money.setDenomenations(new ArrayList<Integer>());
 
-        cassette = new Money();
-
-        // FOR TESTING
-        // FOR TESTING
-        // FOR TESTING
         start();
         sc.close();
     }
@@ -57,17 +42,18 @@ public class Main {
                         System.out.println("Vending Machine not created yet.");
                     break;
                 case "3":
-                    return;
+                    loop = false;
+                    break;
             }
         } while(loop);
     }
 
     private static VendingMachine create() {
-        VendingMachine newVm = null;
+        VendingMachine newVm = new VendingMachine("Work In Progress");
         boolean loop = true;
         String choice;
         boolean success;
-        String[] options = {"Regular Vending Machine", "Special Vending Machine"};
+        String[] options = {"Regular Vending Machine", "Special Vending Machine", "Load Vending Machine (Regular)", "Load Vending Machine (Special)"};
         do {
             displayOptions(options);
             choice = sc.nextLine();
@@ -79,17 +65,26 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    success = createRegular();
+                    success = createRegular(newVm);
 
-                    if (success) {} // do something
+                    if (success) {vm = newVm; im = new InventoryManager(vm);} // do something
 
                     loop = false;
                     break;
                 case "2":
-                    createSpecial();
+                    createSpecial(newVm);
                     loop = false;
                     break;
                 case "3":
+                    System.out.println("Sample Vending Machine Loaded!");
+                    vm = Sample.getRegVm();
+                    loop = false;
+                    break;
+                case "4":
+                    System.out.println("That option is not available at the moment.");
+                    loop = false;
+                    break;
+                case "5":
                     loop = false;
                     break;
             }
@@ -132,7 +127,7 @@ public class Main {
         
     }
 
-    private static boolean initVendingMachine() {
+    private static boolean initVendingMachine(VendingMachine newVm) {
         String choice;
         boolean invalid = true;
         String[] options1 = {"Enter name"};
@@ -151,7 +146,7 @@ public class Main {
                 case "1":
                     System.out.print("\tName: ");
                     String name = sc.nextLine();
-                    vm = new VendingMachine(name);
+                    newVm = new VendingMachine(name);
                     return true;
                 case "2":
                     break;
@@ -163,13 +158,13 @@ public class Main {
         return false;
     }
 
-    private static boolean createRegular() {
+    private static boolean createRegular(VendingMachine newVm) {
         boolean loop = true;
         int slotNo = 0;
         String choice;
         String[] options1 = {"Set Denominations"};
         
-        if (initVendingMachine() == false) return false;
+        if (initVendingMachine(newVm) == false) return false;
 
         do {
             displayOptions(options1);
@@ -210,7 +205,7 @@ public class Main {
 
         loop = true;
         ArrayList<Slot> newSlots = new ArrayList<>();
-        String[] options2 = {"Add Item 1", "Add Starting Money", "Finish"};
+        String[] options2 = {"Add Item 1", "Set Starting Money", "Finish"};
         do {
             options2[0] = "Add Item " + (slotNo + 1);
             System.out.println("\"Current items: \"" + newSlots.toString());
@@ -236,7 +231,7 @@ public class Main {
                             newSlot = new Slot(name, slotNo);
 
                             System.out.println("Item price: ");
-                            newSlot.setPrice(sc.nextFloat());
+                            newSlot.setPrice(sc.nextDouble());
 
                             sc.nextLine();
 
@@ -246,7 +241,7 @@ public class Main {
                             sc.nextLine();
 
                             System.out.println("Item kcal: ");
-                            newSlot.setPrice(sc.nextFloat());
+                            newSlot.setKcal(sc.nextDouble());
 
                             sc.nextLine();
                         }
@@ -263,9 +258,8 @@ public class Main {
                     } while (invalid);
 
                     break;
-                case "2":
-                    cassette = null;
-                    
+                case "2":   
+                    invalid = true;   
                     do {
                         Money tempCassette = new Money();
                         System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
@@ -288,17 +282,21 @@ public class Main {
                                     Integer.parseInt(parsedInput[i])
                                 );
                             }
-                            cassette = tempCassette;
+                            newVm.setBankTotal(tempCassette);
+
+                            invalid = false;
                         }
                         catch (Exception e) {
                             errorMessage();
+                            invalid = true;
                         }
 
-                    } while (cassette == null);
 
+                    } while (invalid);
+                    
                     break;
                 case "3":
-                    if (newSlots.size() >= 8) {vm.setSlots(newSlots); loop = false; displayItems();}
+                    if (newSlots.size() >= 8) {newVm.setSlots(newSlots); loop = false; displayItems(newVm);}
                     else System.out.println("Not enough slots in Vending Machine (min = 8), please add.");
                     break;
                 case "4":
@@ -308,7 +306,7 @@ public class Main {
         return true;
     }
 
-    private static boolean createSpecial() {
+    private static boolean createSpecial(VendingMachine newVm) {
         System.out.println("That option is not available at the moment.");
         return false;
     }
@@ -326,7 +324,7 @@ public class Main {
             
                 switch (choice) {
                     case "1": 
-                        displayItems();
+                        displayItems(vm);
                         System.out.print("Enter the slot number of the item you pick: ");
                         slotNo = sc.nextInt();
                         sc.nextLine();
@@ -354,7 +352,7 @@ public class Main {
                         totalPayment = 0;
                         // FOR SPECIAL
                         // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
-                        System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
+                        System.out.printf("Amount to be paid: %.2lf\n", vm.getSelectedSlot().getPrice());
                         do {
                             System.out.printf("Payment inserted: %d\n", totalPayment);
                             System.out.print("Insert money to pay: ");
@@ -363,15 +361,16 @@ public class Main {
                                 payment = sc.nextInt();
                                 sc.nextLine();
                                 if(!userMoney.insertMoney(payment))
-                                    invalidMessage();
+                                    errorMessage();
                                 else
                                     totalPayment += payment;
                             } catch (InputMismatchException e) {
-                                invalidMessage();
+                                errorMessage();
                             }
-                        } while(vm.getTotal() > totalPayment);
-                        System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
+                        } while(vm.getSelectedSlot().getPrice() > totalPayment);
+                        System.out.println("Change: " + Money.calculateTransaction(vm.getBankTotal(), userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
                         vm.setSelectedSlot(null);
+
                         // FOR SPECIAL
                         // vm.clearSelected();
                         loop = false;
@@ -394,17 +393,23 @@ public class Main {
     private static void maintenance() {
         boolean loop = true, validInput;
         String choice;
-        String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Payment", "Replenish Money"};
+        String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Payment", "Replenish Money", "Get Transaction Summary"};
         int stock, slotNo, denomRep, denomStock;
-        float price;
+        double price;
         String itemName;
         do {
             try {
-                displayOptions(options);
+                displayOptions(options, "Exit");
                 choice = sc.nextLine();
+
+                if (!IsInChoices(choice, makeChoices(1, 7))) {
+                    invalidMessage();
+                    continue;
+                }
+
                 switch (choice) {
                     case "1": // view items
-                        displayItems();
+                        displayItems(vm);
                         break;
                     case "2": // add item
                         validInput = false;
@@ -451,10 +456,10 @@ public class Main {
                                 sc.nextLine();
 
                                 System.out.println("Enter a price to set:");
-                                price = sc.nextFloat();
+                                price = sc.nextDouble();
                                 sc.nextLine();
 
-                                if(vm.priceSlot(price, slotNo)) {
+                                if (vm.priceSlot(price, slotNo)) {
                                     successMessage("price");
                                     validInput = true;
                                 }
@@ -465,8 +470,8 @@ public class Main {
                             }
                         } while(!validInput);
                     case "5": // collect payment
-                        System.out.println("You took out: P" + Money.getIntTotal(cassette));
-                        cassette.clearMoney();
+                        System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
+                        vm.getBankTotal().clearMoney();
                         break;
                     case "6": // replenish money
                         validInput = false;
@@ -480,13 +485,38 @@ public class Main {
                                 denomStock = sc.nextInt();
                                 sc.nextLine();
 
-                                vm.replenishMoney(cassette, denomRep, denomStock);
+                                vm.replenishMoney(vm.getBankTotal(), denomRep, denomStock);
                             } catch(InputMismatchException e) {
                                 errorMessage();
                             }
                         } while(!validInput);
                         break;
                     case "7":
+                        System.out.println("\tYour transaction summary since last reset: ");
+                        System.out.printf("\tYour total profit is: P%d\n\n", im.getTotalProfit());
+                        im.printInventoryLost();
+
+                        String[] options3 = {"Reset trackers"};
+
+                        displayOptions(options3, "Back");
+
+                        choice = sc.nextLine();
+
+                        if (!IsInChoices(choice, makeChoices(1, 2))) {
+                            invalidMessage();
+                            continue;
+                        }
+
+                        switch (choice) {
+                            case "1":
+                                System.out.println("\tTrackers reset.");
+                                im.reconfigure();
+                                break;
+                            case "2":
+                                break;
+                        }
+                        // do something
+                    case "8":
                         loop = false;
                         break;
                     default:
@@ -501,11 +531,11 @@ public class Main {
         
     }
     
-    public static void displayItems() {
+    public static void displayItems(VendingMachine vm) {
         int i = 0;
         for(Slot slot : vm.getSlots()) {
             if(slot.isAvailable())
-                System.out.printf("[%d] %s - %d in stock - %.2f pesos - %.1f calories\n", i+1, slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
+                System.out.printf("[%d] %s - %d in stock - %.2lf pesos - %.3lf calories\n", i+1, slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
             else
                 System.out.printf("[%d] %s - NOT AVAILABLE\n", i+1, slot.getName());
             i++;

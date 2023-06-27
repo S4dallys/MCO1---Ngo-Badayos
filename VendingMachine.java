@@ -5,7 +5,7 @@ public class VendingMachine {
     private ArrayList<Slot> slots = new ArrayList<>();
     private ArrayList<Slot> selectedSlots = new ArrayList<>();
     private Slot selectedSlot;
-    private Money bankTotal = new Money();
+    private Money bankTotal;
     
     final int MINSLOTS = 8;
 
@@ -35,6 +35,10 @@ public class VendingMachine {
 
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
+    }
+
+    public void setBankTotal(Money bankTotal) {
+        this.bankTotal = bankTotal;
     }
 
     public void setSelectedSlots(ArrayList<Slot> selectedSlots) {
@@ -88,7 +92,7 @@ public class VendingMachine {
         }
     }
 
-    public boolean priceSlot(float price, int slotNo) {
+    public boolean priceSlot(double price, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setPrice(price);
@@ -120,8 +124,8 @@ public class VendingMachine {
         return slotNo >= 1 && slotNo <= slots.size();
     }
 
-    public float getTotal() {
-        float sum = 0;
+    public double getTotal() {
+        double sum = 0;
         for(Slot slot : selectedSlots) {
             sum += slot.getPrice() * slot.getStock();
         }

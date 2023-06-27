@@ -59,8 +59,6 @@ public class Money {
     
 
     public Money() {
-        if (acceptedDenomenations == null) throw new NullPointerException("Please initialize accepted Money denomenations using:\nMoney.setDenomenations()");
-
         // init linkedhashmap
         for (Integer bill : acceptedDenomenations) {
             this.money.put(bill, 0);
