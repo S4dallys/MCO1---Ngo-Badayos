@@ -59,13 +59,11 @@ public class Main {
     private static void start() {
         boolean loop = true;
         String choice;
+        String[] options = {"Create Vending Machine", "Vending Machine Menu"};
         do {
-            System.out.println("\t[1] Create Vending Machine");
-            System.out.println("\t[2] Vending Machine Menu");
-            System.out.println("\t[3] Exit");
-            System.out.print("\tPick: ");
+            displayOptions(options);
             choice = sc.nextLine();
-      
+
             switch (choice) {
                 case "1":
                     create();
@@ -89,11 +87,9 @@ public class Main {
         VendingMachine newVm = null;
         boolean loop = true;
         String choice;
+        String[] options = {"Regular Vending Machine", "Special Vending Machine"};
         do {
-            System.out.println("\t[1] Regular Vending Machine");
-            System.out.println("\t[2] Special Vending Machine");
-            System.out.println("\t[3] Cancel");
-            System.out.print("\tPick: ");
+            displayOptions(options);
             choice = sc.nextLine();
 
             switch (choice) {
@@ -120,11 +116,9 @@ public class Main {
     private static void test() {
         boolean loop = true;
         String choice;
+        String[] options = {"Vending Features", "Maintenance"};
         do {
-            System.out.println("\t[1] Vending Features");
-            System.out.println("\t[2] Maintenance");
-            System.out.println("\t[3] Exit");
-            System.out.print("\tPick: ");
+            displayOptions(options);
             choice = sc.nextLine();
       
             switch (choice) {
@@ -153,16 +147,15 @@ public class Main {
 
     private static boolean initVendingMachine() {
         String choice;
+        String[] options1 = {"Enter name"};
 
-        System.out.println("\t[1] Enter Name");
-        System.out.println("\t[2] Cancel");
-        System.out.println("\tPick: ");
+        displayOptions(options1);
 
         choice = sc.nextLine();
 
         switch(choice) {
             case "1":
-                System.out.println("\tName: ");
+                System.out.print("\tName: ");
                 vm = new VendingMachine(sc.nextLine());
                 break;
             case "2":
@@ -175,13 +168,12 @@ public class Main {
         boolean loop = true;
         int slotNo = 0;
         String choice;
+        String[] options1 = {"Set Denominations"};
         
         if (initVendingMachine() == false) return false;
 
         do {
-            System.out.println("\t[1] Set Denominations");
-            System.out.println("\t[2] Cancel");
-            System.out.print("\tPick: ");
+            displayOptions(options1);
             choice = sc.nextLine();
 
             switch(choice) {
@@ -208,14 +200,10 @@ public class Main {
 
         loop = true;
         ArrayList<Slot> newSlots = new ArrayList<>();
+        String[] options2 = {"Add Item " + (slotNo + 1), "Add Starting Money", "Finish"};
         do {
-            System.out.println("Current items: " + newSlots.toString());
-
-            System.out.println("\t[1] Add Item " + (slotNo + 1));
-            System.out.println("\t[2] Add Starting Money");
-            System.out.println("\t[3] Finish");
-            System.out.println("\t[4] Cancel");
-
+            System.out.println("\"Current items: \"" + newSlots.toString());
+            displayOptions(options2);
             choice = sc.nextLine();
 
             switch (choice) {
@@ -249,8 +237,12 @@ public class Main {
                     }                      
                     break;
                 case "3":
-                    if (slotNo > 0) {vm.setSlots(newSlots); loop = false;}
-                    else System.out.println("No slots in Vending Machine, please add.");
+                    if (slotNo > 0) {
+                        vm.setSlots(newSlots); 
+                        loop = false;
+                    }
+                    else 
+                        System.out.println("No slots in Vending Machine, please add.");
                     break;
                 case "4":
                     return false;
@@ -270,12 +262,10 @@ public class Main {
         Money userMoney;
         boolean loop = true, available = true;
         String choice;
+        String[] options = {"Pick Item", "Purchase Item"};
         int slotNo, itemAmt, totalPayment, payment;
         do {
-            System.out.println("\t[1] Pick Item");
-            System.out.println("\t[2] Purchase Item");
-            System.out.println("\t[3] Exit");
-            System.out.print("\tPick: ");
+            displayOptions(options);
             choice = sc.nextLine();
          
             switch (choice) {
@@ -284,13 +274,16 @@ public class Main {
                     System.out.print("Enter the slot number of the item you pick: ");
                     slotNo = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Enter the amount to be added to your meal: ");
-                    itemAmt = sc.nextInt();
-                    sc.nextLine();
+                    // FOR SPECIAL:
+                    // System.out.print("Enter the amount to be added to your meal: ");
+                    // itemAmt = sc.nextInt();
+                    // sc.nextLine();
                     for(Slot slot : vm.getSlots())
                         if(slot.getName().equals(vm.getSlot(slotNo).getName()) && slot.isAvailable()) {
-                            vm.addSlot(slotNo, itemAmt);
-                            displaySelected();
+                            // FOR SPECIAL:
+                            // vm.addSlot(slotNo, itemAmt);
+                            // displaySelected();
+                            vm.setSelectedSlot(vm.getSlot(slotNo));
                             available = true;
                             break;
                         } 
@@ -303,7 +296,9 @@ public class Main {
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
-                    System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
+                    // FOR SPECIAL
+                    // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
+                    System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                     do {
                         System.out.printf("Payment inserted: %d\n", totalPayment);
                         System.out.print("Insert money to pay: ");
@@ -314,8 +309,10 @@ public class Main {
                         else
                             totalPayment += payment;
                     } while(vm.getTotal() > totalPayment);
-                    System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getTotal()).getMoney());
-                    vm.clearSelected();
+                    System.out.println("Change: " + Money.calculateTransaction(cassette, userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
+                    vm.setSelectedSlot(null);
+                    // FOR SPECIAL
+                    // vm.clearSelected();
                     loop = false;
                     break;
                 case "3":
@@ -333,18 +330,12 @@ public class Main {
     private static void maintenance() {
         boolean loop = true;
         String choice;
+        String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Payment", "Replenish Money"};
         int stock, slotNo, denomRep, denomStock;
         float price;
         String itemName;
         do {
-            System.out.println("\t[1] View Items");
-            System.out.println("\t[2] Add Item");
-            System.out.println("\t[3] Restock Item");
-            System.out.println("\t[4] Set/Change Price");
-            System.out.println("\t[5] Collect Payment");
-            System.out.println("\t[6] Replenish Money");
-            System.out.println("\t[7] Exit");
-            System.out.print("\tPick: ");
+            displayOptions(options);
             choice = sc.nextLine();
             switch (choice) {
                 case "1": // view items
@@ -421,6 +412,16 @@ public class Main {
         for (Slot slot : vm.getSelectedSlots()) {
             System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(), slot.getPrice() * slot.getStock(), slot.getKcal() * slot.getStock());
         }
+    }
+
+    private static void displayOptions(String[] options) {
+        int i = 1;
+        for(String option : options) {
+            System.out.printf("\t[%d] %s\n", i, option);
+            i++;
+        }
+        System.out.printf("\t[%d] Exit\n", i);
+        System.out.print("\tPick: ");
     }
 
     private static void successMessage(String changed) {
