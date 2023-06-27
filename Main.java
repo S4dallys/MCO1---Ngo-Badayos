@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+import java.util.HashSet;
 
 
 public class Main {
@@ -38,7 +37,7 @@ public class Main {
         String choice;
         String[] options = {"Create Vending Machine", "Vending Machine Menu"};
         do {
-            displayOptions(options);
+            displayOptions(options, "Exit");
             choice = sc.nextLine();
 
             if (!IsInChoices(choice, makeChoices(1, 3))) {
@@ -66,6 +65,7 @@ public class Main {
         VendingMachine newVm = null;
         boolean loop = true;
         String choice;
+        boolean success;
         String[] options = {"Regular Vending Machine", "Special Vending Machine"};
         do {
             displayOptions(options);
@@ -78,7 +78,10 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    createRegular();
+                    success = createRegular();
+
+                    if (success) {} // do something
+
                     loop = false;
                     break;
                 case "2":
@@ -130,22 +133,33 @@ public class Main {
 
     private static boolean initVendingMachine() {
         String choice;
+        boolean invalid = true;
         String[] options1 = {"Enter name"};
 
-        displayOptions(options1);
+        do {
+            displayOptions(options1);
 
-        choice = sc.nextLine();
+            choice = sc.nextLine();
 
-        switch(choice) {
-            case "1":
-                System.out.print("\tName: ");
-                String name = sc.nextLine();
-                vm = new VendingMachine(name);
-                break;
-            case "2":
-                break;
-        }
-        return (choice == "2") ? false : true;
+            if (!IsInChoices(choice, makeChoices(1, 2))) {
+                    invalidMessage();
+                    continue;
+            }
+
+            switch(choice) {
+                case "1":
+                    System.out.print("\tName: ");
+                    String name = sc.nextLine();
+                    vm = new VendingMachine(name);
+                    return true;
+                case "2":
+                    break;
+            }
+
+            invalid = false;
+        } while (invalid);
+
+        return false;
     }
 
     private static boolean createRegular() {
@@ -165,24 +179,33 @@ public class Main {
                 continue;
             }
 
+            loop = false;
+        } while (loop);
+
+            loop = true;
             switch(choice) {
                 case "1":
-                    System.out.print("Please write each denomination with spaces in between (ex. 1 5 10 20): ");
-                    
-                    ArrayList<Integer> denominations = new ArrayList<>();
-                    String temp = sc.nextLine();
-
-                    for (String i : temp.split(" ")) {
-                        denominations.add(Integer.parseInt(i));
-                    }
-
-                    Money.setDenomenations(denominations);
-                    loop = false;
+                    do {
+                        System.out.print("Please write each denomination with spaces in between (ex. 1 5 10 20): ");
+                        
+                        ArrayList<Integer> denominations = new ArrayList<>();
+                        String temp = sc.nextLine();
+                        try {
+                            for (String i : temp.split(" ")) {
+                                denominations.add(Integer.parseInt(i));
+                            }
+                        } catch (Exception e) {System.out.println("Invalid denomenations, Try again!"); continue;}
+                        
+                        denominations = new ArrayList<>(new HashSet<>(denominations));
+                        
+                        Money.setDenomenations(denominations);
+                        loop = false;
+                    } while (loop);
                     break;
                 case "2":
                     return false;
             }
-        } while (loop);
+        
 
         loop = true;
         ArrayList<Slot> newSlots = new ArrayList<>();
@@ -241,7 +264,7 @@ public class Main {
                     do {
                         Money tempCassette = new Money();
                         System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
-                        System.out.println("Ex. 5 4 5, would mean 5x First Denomenation, 4x Second Denomation, etc.");
+                        System.out.println("Ex. 1 2 3, would mean 1x First Denomenation, 2x Second Denomation, etc.");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
@@ -445,7 +468,17 @@ public class Main {
             System.out.printf("\t[%d] %s\n", i, option);
             i++;
         }
-        System.out.printf("\t[%d] Exit\n", i);
+        System.out.printf("\t[%d] Cancel\n", i);
+        System.out.print("\tPick: ");
+    }
+
+    private static void displayOptions(String[] options, String last) {
+        int i = 1;
+        for(String option : options) {
+            System.out.printf("\t[%d] %s\n", i, option);
+            i++;
+        }
+        System.out.printf("\t[%d] %s\n", i, last);
         System.out.print("\tPick: ");
     }
 
