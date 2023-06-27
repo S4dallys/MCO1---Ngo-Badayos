@@ -510,6 +510,7 @@ public class Main {
                 case "6":
                     System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
                     vm.getBankTotal().clearMoney();
+                    im.setTotalProfit(0);
                     break;
                 case "7": // replenish money
                     boolean invalid = true;
