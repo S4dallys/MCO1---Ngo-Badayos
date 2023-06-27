@@ -501,15 +501,14 @@ public class Main {
                             errorMessage();
                         }
                     } while (!validInput);
-                case "5":
+                case "5": // collect payment
                     System.out.println("You took out: P" + im.getTotalProfit());
                     im.setTotalProfit(0);
-                    // do something
-                    // casette - im.invemtroryStock
                     break;
-                case "6":
+                case "6": // collect money
                     System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
                     vm.getBankTotal().clearMoney();
+                    im.setTotalProfit(0);
                     break;
                 case "7": // replenish money
                     boolean invalid = true;
