@@ -78,6 +78,7 @@ public class Main {
                 case "3":
                     System.out.println("Sample Vending Machine Loaded!");
                     vm = Sample.getRegVm();
+                    im = new InventoryManager(vm);
                     loop = false;
                     break;
                 case "4":
@@ -319,18 +320,36 @@ public class Main {
         boolean loop = true, available = true;
         String choice;
         String[] options = {"Pick Item", "Purchase Item"};
-        int slotNo, itemAmt, totalPayment, payment; //itemAmt is for Special VM
+        int slotNo = 0, itemAmt, totalPayment, payment; //itemAmt is for Special VM
         do {
-            try {
+           
                 displayOptions(options);
                 choice = sc.nextLine();
+
+                if (!IsInChoices(choice, makeChoices(1, 3))) {
+                    invalidMessage();
+                    continue;
+                }
             
                 switch (choice) {
                     case "1": 
                         displayItems(vm);
-                        System.out.print("Enter the slot number of the item you pick: ");
-                        slotNo = sc.nextInt();
-                        sc.nextLine();
+                        boolean invalid = true;
+                        do {
+                            System.out.print("Enter the slot number of the item you pick: ");
+                            try {slotNo = sc.nextInt();} 
+                            catch (Exception e) {errorMessage(); sc.nextLine(); continue;}
+
+                            if (!IsInChoices(Integer.toString(slotNo), makeChoices(1, vm.getSlots().size()))) {
+                                invalidMessage();
+                                continue;
+                            }
+
+                            sc.nextLine();
+                            invalid = false;
+                        } while (invalid);
+
+
                         // FOR SPECIAL:
                         // System.out.print("Enter the amount to be added to your meal: ");
                         // itemAmt = sc.nextInt();
@@ -355,7 +374,7 @@ public class Main {
                         totalPayment = 0;
                         // FOR SPECIAL
                         // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
-                        System.out.printf("Amount to be paid: %.2lf\n", vm.getSelectedSlot().getPrice());
+                        System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                         do {
                             System.out.printf("Payment inserted: %d\n", totalPayment);
                             System.out.print("Insert money to pay: ");
@@ -375,6 +394,7 @@ public class Main {
                         System.out.println("Change: " + Money.calculateTransaction(vm.getBankTotal(), userMoney, (int)vm.getSelectedSlot().getPrice()).getMoney());
                         Slot currentSlot = vm.getSlots().get(vm.currentSlot);
                         currentSlot.setStock(currentSlot.getStock()-1);
+                        vm.setSelectedSlot(null);
 
                         // FOR SPECIAL
                         // vm.clearSelected();
@@ -387,9 +407,7 @@ public class Main {
                         invalidMessage();
                         break;
                 }
-            } catch (Exception e) {
-                errorMessage();
-            }
+           
         }while(loop);
 
         
@@ -403,136 +421,132 @@ public class Main {
         double price;
         String itemName;
         do {
-            try {
-                displayOptions(options, "Exit");
-                choice = sc.nextLine();
+            displayOptions(options, "Exit");
+            choice = sc.nextLine();
 
-                if (!IsInChoices(choice, makeChoices(1, 7))) {
-                    invalidMessage();
-                    continue;
-                }
+            if (!IsInChoices(choice, makeChoices(1, 8))) {
+                invalidMessage();
+                continue;
+            }
 
-                switch (choice) {
-                    case "1": // view items
-                        displayItems(vm);
-                        break;
-                    case "2": // add item
-                        validInput = false;
-                        do{ 
-                            try {
-                                System.out.print("Enter name of item to add: ");
-                                itemName = sc.nextLine();
-                                vm.addSlot(itemName);
+            switch (choice) {
+                case "1": // view items
+                    displayItems(vm);
+                    break;
+                case "2": // add item
+                    validInput = false;
+                    do{ 
+                        try {
+                            System.out.print("Enter name of item to add: ");
+                            itemName = sc.nextLine();
+                            vm.addSlot(itemName);
+                            validInput = true;
+                        } catch(InputMismatchException e) {
+                            errorMessage();
+                        }
+                    } while(!validInput);
+                    break;
+                case "3": // restocks items. Adds to current amount in stock, not replace
+                    validInput = false;
+                    do{ 
+                        try {
+                            System.out.println("Enter slot number of item to stock:");
+                            slotNo = sc.nextInt();
+                            sc.nextLine();
+                    
+                            System.out.println("How many would you like to stock?:");
+                            stock = sc.nextInt();
+                            sc.nextLine();
+
+                            if(vm.stockSlot(stock, slotNo)) {
+                                successMessage("stock");
                                 validInput = true;
-                            } catch(InputMismatchException e) {
-                                errorMessage();
                             }
-                        } while(!validInput);
-                        break;
-                    case "3": // restocks items. Adds to current amount in stock, not replace
-                        validInput = false;
-                        do{ 
-                            try {
-                                System.out.println("Enter slot number of item to stock:");
-                                slotNo = sc.nextInt();
-                                sc.nextLine();
-                        
-                                System.out.println("How many would you like to stock?:");
-                                stock = sc.nextInt();
-                                sc.nextLine();
-
-                                if(vm.stockSlot(stock, slotNo)) {
-                                    successMessage("stock");
-                                    validInput = true;
-                                }
-                                else
-                                    System.out.println("Invalid slot number."); 
-                            } catch(InputMismatchException e) {
-                                sc.nextLine();
-                                errorMessage();
-                            }
-                        } while(!validInput);
-                        break;
-                    case "4": // set price
-                        validInput = false;
-                        do{ 
-                            try {
-                                System.out.println("Enter slot number of item to change price:");
-                                slotNo = sc.nextInt();
-                                sc.nextLine();
-
-                                System.out.println("Enter a price to set:");
-                                price = sc.nextDouble();
-                                sc.nextLine();
-
-                                if (vm.priceSlot(price, slotNo)) {
-                                    successMessage("price");
-                                    validInput = true;
-                                }
-                                else
-                                    System.out.println("Invalid slot number."); 
-                            } catch(InputMismatchException e) {
-                                sc.nextLine();
-                                errorMessage();
-                            }
-                        } while(!validInput);
-                    case "5": // collect payment
-                        System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
-                        vm.getBankTotal().clearMoney();
-                        break;
-                    case "6": // replenish money
-                        validInput = false;
-                        do{ 
-                            try {
-                                System.out.print("Enter a denomination to replenish: ");
-                                denomRep = sc.nextInt();
-                                sc.nextLine();
-
-                                System.out.print("Enter amount to replenish in selected denomination: ");
-                                denomStock = sc.nextInt();
-                                sc.nextLine();
-
-                                vm.replenishMoney(vm.getBankTotal(), denomRep, denomStock);
-                            } catch(InputMismatchException e) {
-                                sc.nextLine();
-                                errorMessage();
-                            }
-                        } while(!validInput);
-                        break;
-                    case "7":
-                        System.out.println("\tYour transaction summary since last reset: ");
-                        System.out.printf("\tYour total profit is: P%d\n\n", im.getTotalProfit());
-                        im.printInventoryLost();
-
-                        String[] options3 = {"Reset trackers"};
-
-                        displayOptions(options3, "Back");
-
-                        choice = sc.nextLine();
-
-                        if (!IsInChoices(choice, makeChoices(1, 2))) {
-                            invalidMessage();
-                            continue;
+                            else
+                                System.out.println("Invalid slot number."); 
+                        } catch(InputMismatchException e) {
+                            sc.nextLine();
+                            errorMessage();
                         }
+                    } while(!validInput);
+                    break;
+                case "4": // set price
+                    validInput = false;
+                    do{ 
+                        try {
+                            System.out.println("Enter slot number of item to change price:");
+                            slotNo = sc.nextInt();
+                            sc.nextLine();
 
-                        switch (choice) {
-                            case "1":
-                                System.out.println("\tTrackers reset.");
-                                im.reconfigure();
-                                break;
-                            case "2":
-                                break;
+                            System.out.println("Enter a price to set:");
+                            price = sc.nextDouble();
+                            sc.nextLine();
+
+                            if (vm.priceSlot(price, slotNo)) {
+                                successMessage("price");
+                                validInput = true;
+                            }
+                            else
+                                System.out.println("Invalid slot number."); 
+                        } catch(InputMismatchException e) {
+                            sc.nextLine();
+                            errorMessage();
                         }
-                        // do something
-                    case "8":
-                        loop = false;
-                        break;
-                    default:
+                    } while(!validInput);
+                case "5": // collect payment
+                    System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
+                    vm.getBankTotal().clearMoney();
+                    break;
+                case "6": // replenish money
+                    validInput = false;
+                    do{ 
+                        try {
+                            System.out.print("Enter a denomination to replenish: ");
+                            denomRep = sc.nextInt();
+                            sc.nextLine();
+
+                            System.out.print("Enter amount to replenish in selected denomination: ");
+                            denomStock = sc.nextInt();
+                            sc.nextLine();
+
+                            vm.replenishMoney(vm.getBankTotal(), denomRep, denomStock);
+                        } catch(InputMismatchException e) {
+                            sc.nextLine();
+                            errorMessage();
+                        }
+                    } while(!validInput);
+                    break;
+                case "7":
+                    System.out.println("\tYour transaction summary since last reset: ");
+                    System.out.printf("\tYour total profit is: P%d\n\n", im.getTotalProfit());
+                    im.printInventoryLost();
+
+                    String[] options3 = {"Reset trackers"};
+
+                    displayOptions(options3, "Back");
+
+                    choice = sc.nextLine();
+
+                    if (!IsInChoices(choice, makeChoices(1, 2))) {
                         invalidMessage();
-                        break;
-                }
-            } catch (Exception e) {
-                errorMessage();
+                        continue;
+                    }
+
+                    switch (choice) {
+                        case "1":
+                            System.out.println("\tTrackers reset.");
+                            im.reconfigure();
+                            break;
+                        case "2":
+                            break;
+                    }
+                    // do something
+                case "8":
+                    loop = false;
+                    break;
+                default:
+                    invalidMessage();
+                    break;
             }
         }while(loop);
 
@@ -543,7 +557,7 @@ public class Main {
         int i = 0;
         for(Slot slot : vm.getSlots()) {
             if(slot.isAvailable())
-                System.out.printf("[%d] %s - %d in stock - %.2lf pesos - %.3lf calories\n", i+1, slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
+                System.out.printf("[%d] %s - %d in stock - %.2f pesos - %.3f calories\n", i+1, slot.getName(), slot.getStock(), slot.getPrice(), slot.getKcal());
             else
                 System.out.printf("[%d] %s - NOT AVAILABLE\n", i+1, slot.getName());
             i++;

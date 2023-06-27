@@ -59,7 +59,7 @@ public class InventoryManager {
 
     public void printInventoryLost() {
         for (Map.Entry<String, Integer> entry : getInventoryLost().entrySet())
-            System.out.println("ITEM: " + entry.getKey() + " STOCK LOST: " + entry.getValue());
+            System.out.println("ITEM: " + entry.getKey() + " STOCK PURCHASED: " + entry.getValue());
     }
 
     public void printStartingStock() {

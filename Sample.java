@@ -35,6 +35,7 @@ public class Sample {
         sampleSlots.add(new Slot("Cabbage", 35, 10, 0.025, 7));
 
         sample.setSlots(sampleSlots);
+        sample.setBankTotal(sampleBankTotal);
 
         return sample;
     }
