@@ -93,7 +93,8 @@ public class Money {
     }
 
     public void clearMoney() {
-        money.clear();
+        for (Map.Entry<Integer, Integer> entry : money.entrySet())
+            entry.setValue(0);
     }
 
     // check if entered amount is in correct denomenation

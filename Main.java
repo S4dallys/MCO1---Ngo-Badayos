@@ -416,7 +416,7 @@ public class Main {
     private static void maintenance() {
         boolean loop = true, validInput;
         String choice;
-        String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Payment", "Replenish Money", "Get Transaction Summary"};
+        String[] options = {"View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Profit", "Collect All Money", "Replenish Money", "Get Transaction Summary"};
         int stock, slotNo, denomRep, denomStock;
         double price;
         String itemName;
@@ -424,7 +424,7 @@ public class Main {
             displayOptions(options, "Exit");
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 8))) {
+            if (!IsInChoices(choice, makeChoices(1, 9))) {
                 invalidMessage();
                 continue;
             }
@@ -493,30 +493,52 @@ public class Main {
                             errorMessage();
                         }
                     } while(!validInput);
-                case "5": // collect payment
+                case "5": 
+                    // do something
+                    break;
+                case "6": 
                     System.out.println("You took out: P" + Money.getIntTotal(vm.getBankTotal()));
                     vm.getBankTotal().clearMoney();
                     break;
-                case "6": // replenish money
+                case "7": // replenish money
+                    boolean invalid = true;
                     validInput = false;
-                    do{ 
-                        try {
-                            System.out.print("Enter a denomination to replenish: ");
-                            denomRep = sc.nextInt();
-                            sc.nextLine();
+                    do {
+                        Money tempCassette = new Money();
+                        System.out.println("Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
+                        System.out.println("Ex. 1 2 3, would mean 1x First Denomenation, 2x Second Denomation, etc.");
 
-                            System.out.print("Enter amount to replenish in selected denomination: ");
-                            denomStock = sc.nextInt();
-                            sc.nextLine();
+                        String input = sc.nextLine();
+                        String parsedInput[] = input.split(" ");
 
-                            vm.replenishMoney(vm.getBankTotal(), denomRep, denomStock);
-                        } catch(InputMismatchException e) {
-                            sc.nextLine();
-                            errorMessage();
+                        int inputLen = parsedInput.length;
+
+                        if (inputLen > Money.getAcceptedDenomenations().size()) {
+                            errorMessage(); 
+                            continue;
                         }
-                    } while(!validInput);
+                        
+                        try {
+                            for (int i = 0; i < inputLen; i++) {
+                                tempCassette.insertMoney(
+                                    Money.getAcceptedDenomenations().get(i), 
+                                    Integer.parseInt(parsedInput[i])
+                                );
+                            }
+
+                            Money.mergeMoney(vm.getBankTotal(), tempCassette);
+
+                            invalid = false;
+                        }
+                        catch (InputMismatchException e) {
+                            errorMessage();
+                            invalid = true;
+                        }
+
+
+                    } while (invalid);
                     break;
-                case "7":
+                case "8":
                     System.out.println("\tYour transaction summary since last reset: ");
                     System.out.printf("\tYour total profit is: P%d\n\n", im.getTotalProfit());
                     im.printInventoryLost();
@@ -541,7 +563,7 @@ public class Main {
                             break;
                     }
                     // do something
-                case "8":
+                case "9":
                     loop = false;
                     break;
                 default:
