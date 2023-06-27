@@ -4,6 +4,7 @@ public class VendingMachine {
     private String vmName;
     private ArrayList<Slot> slots = new ArrayList<>();
     private ArrayList<Slot> selectedSlots = new ArrayList<>();
+    private Slot selectedSlot;
     private Money bankTotal = new Money();
     
     final int MINSLOTS = 8;
@@ -28,12 +29,20 @@ public class VendingMachine {
         return selectedSlots;
     }
 
+    public Slot getSelectedSlot() {
+        return selectedSlot;
+    }
+
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
     }
 
     public void setSelectedSlots(ArrayList<Slot> selectedSlots) {
         this.selectedSlots = selectedSlots;
+    }
+
+    public void setSelectedSlot(Slot selectedSlot) {
+        this.selectedSlot = selectedSlot;
     }
 
     // user selected slots
