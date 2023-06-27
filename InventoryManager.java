@@ -50,8 +50,14 @@ public class InventoryManager {
         LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
 
         for (int i = 0; i < vm.getSlots().size(); i++) {
-            result.put(vm.getSlots().get(i).getName(),
-            inventoryStock.get(i) - vm.getSlots().get(i).getStock());
+            try {
+                result.put(vm.getSlots().get(i).getName(),
+                inventoryStock.get(i) - vm.getSlots().get(i).getStock());
+            }
+            catch (Exception e) {
+                result.put(vm.getSlots().get(i).getName(),
+                -1);
+            };
         }
 
         return result;
@@ -59,7 +65,7 @@ public class InventoryManager {
 
     public void printInventoryLost() {
         for (Map.Entry<String, Integer> entry : getInventoryLost().entrySet())
-            System.out.println("ITEM: " + entry.getKey() + " STOCK PURCHASED: " + entry.getValue());
+            System.out.println("ITEM: " + entry.getKey() + " STOCK PURCHASED: " + ((entry.getValue() == -1) ? "NEW ITEM" : entry.getValue()));
     }
 
     public void printStartingStock() {
