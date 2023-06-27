@@ -8,6 +8,7 @@ public class InventoryManager {
     private int startingTotal;
     private ArrayList<Integer> inventoryStock = new ArrayList<>();
     private VendingMachine vm;
+    private double totalProfit = 0;
     
     public InventoryManager(VendingMachine vm) {
         this.vm = vm;
@@ -16,6 +17,10 @@ public class InventoryManager {
             inventoryStock.add(slot.getStock());
 
         this.startingTotal = Money.getIntTotal(vm.getBankTotal());
+    }
+
+    public void setTotalProfit(double totalProfit) {
+        this.totalProfit = totalProfit;
     }
 
     // sets inventory manager to the current snapshot of the vm
@@ -42,8 +47,9 @@ public class InventoryManager {
         return vm;
     }
 
-    public int getTotalProfit() {
-        return Money.getIntTotal(vm.getBankTotal()) - startingTotal;
+    public double getTotalProfit() {
+        return totalProfit;
+        //return Money.getIntTotal(vm.getBankTotal()) - startingTotal;
     }
 
     public LinkedHashMap<String, Integer> getInventoryLost() {

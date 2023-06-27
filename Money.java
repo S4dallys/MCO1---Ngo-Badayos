@@ -19,45 +19,6 @@ public class Money {
     private LinkedHashMap<Integer, Integer> money = new LinkedHashMap<>();
     private static ArrayList<Integer> acceptedDenomenations;
 
-    // use for testing
-    
-    // public static void main(String[] args) {
-    //     ArrayList<Integer> d = new ArrayList<>();
-    //     d.add(1);
-    //     d.add(5);
-    //     d.add(10);
-    //     d.add(20);
-    //     d.add(50);
-
-    //     Money.setDenomenations(d);
-
-    //     Money m = new Money();
-    //     Money bank = new Money();
-
-    //     bank.insertMoney(5);
-
-    //     m.insertMoney(10);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-    //     m.insertMoney(20);
-
-    //     System.out.println("GIVEN " + Money.getIntTotal(m) + "\nBANK: " + Money.getIntTotal(bank));
-    //     System.out.println("\nCHANGE: " + Money.calculateTransaction(bank, m, 105).money);
-    //     System.out.println("\nUPDATED BANK " + getIntTotal(bank));
-    // }
-    
-
-    // public static void main(String[] args) {
-    //     ArrayList<Integer> d = new ArrayList<>();
-    //     d.add(1); d.add(10); d.add(20); d.add(50); d.add(100);
-    //     Money.setDenomenations(d);
-    //     Money m = new Money();
-    //     System.out.println(m.getMoney());
-    // }
-    
-
     public Money() {
         // init linkedhashmap
         for (Integer bill : acceptedDenomenations) {

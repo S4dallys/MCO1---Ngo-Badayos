@@ -401,7 +401,8 @@ public class Main {
                     System.out.println("Change: " + Money
                             .calculateTransaction(vm.getBankTotal(), userMoney, (int) vm.getSelectedSlot().getPrice())
                             .getMoney());
-                    Slot currentSlot = vm.getSlots().get(vm.currentSlot);
+                    im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
+                    Slot currentSlot = vm.getSlots().get(vm.currentSlotNo);
                     currentSlot.setStock(currentSlot.getStock() - 1);
                     vm.setSelectedSlot(null);
 
@@ -501,6 +502,8 @@ public class Main {
                         }
                     } while (!validInput);
                 case "5":
+                    System.out.println("You took out: P" + im.getTotalProfit());
+                    im.setTotalProfit(0);
                     // do something
                     // casette - im.invemtroryStock
                     break;
@@ -547,7 +550,7 @@ public class Main {
                     break;
                 case "8":
                     System.out.println("\tYour transaction summary since last reset: ");
-                    System.out.printf("\tYour total profit is: P%d\n\n", im.getTotalProfit());
+                    System.out.printf("\tYour total profit is: P%f\n\n", im.getTotalProfit());
                     im.printInventoryLost();
 
                     String[] options3 = { "Reset trackers" };
