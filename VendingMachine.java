@@ -83,7 +83,7 @@ public class VendingMachine {
     }
 
     // adds to slot instead of setting
-    public boolean stockSlot(int slotNo, int stock) {
+    public boolean stockSlot(int stock, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setStock(slot.getStock() + stock);
