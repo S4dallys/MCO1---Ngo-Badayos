@@ -195,7 +195,10 @@ public class Main {
                             for (String i : temp.split(" ")) {
                                 denominations.add(Integer.parseInt(i));
                             }
-                        } catch (Exception e) {System.out.println("Invalid denomenations, Try again!"); continue;}
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid denomenations, Try again!"); 
+                            continue;
+                        }
                         
                         denominations = new ArrayList<>(new HashSet<>(denominations));
                         
@@ -250,7 +253,7 @@ public class Main {
 
                             sc.nextLine();
                         }
-                        catch (Exception e) {
+                        catch (InputMismatchException e) {
                             errorMessage(); 
                             sc.nextLine(); 
                             continue;
@@ -290,7 +293,7 @@ public class Main {
                             }
                             cassette = tempCassette;
                         }
-                        catch (Exception e) {
+                        catch (InputMismatchException e) {
                             errorMessage();
                         }
 
@@ -318,7 +321,7 @@ public class Main {
         boolean loop = true, available = true;
         String choice;
         String[] options = {"Pick Item", "Purchase Item"};
-        int slotNo, itemAmt, totalPayment, payment;
+        int slotNo, itemAmt, totalPayment, payment; //itemAmt is for Special VM
         do {
             try {
                 displayOptions(options);
@@ -367,6 +370,7 @@ public class Main {
                                 else
                                     totalPayment += payment;
                             } catch (InputMismatchException e) {
+                                sc.nextLine();
                                 invalidMessage();
                             }
                         } while(vm.getTotal() > totalPayment);
@@ -438,6 +442,7 @@ public class Main {
                                 else
                                     System.out.println("Invalid slot number."); 
                             } catch(InputMismatchException e) {
+                                sc.nextLine();
                                 errorMessage();
                             }
                         } while(!validInput);
@@ -461,6 +466,7 @@ public class Main {
                                 else
                                     System.out.println("Invalid slot number."); 
                             } catch(InputMismatchException e) {
+                                sc.nextLine();
                                 errorMessage();
                             }
                         } while(!validInput);
@@ -482,6 +488,7 @@ public class Main {
 
                                 vm.replenishMoney(cassette, denomRep, denomStock);
                             } catch(InputMismatchException e) {
+                                sc.nextLine();
                                 errorMessage();
                             }
                         } while(!validInput);
