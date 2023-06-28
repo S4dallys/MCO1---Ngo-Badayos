@@ -76,7 +76,6 @@ public class Money {
         Money result = new Money();
         
         mergeMoney(result, given);
-        mergeMoney(tempBank, given);
         mergeMoney(tempBank, bankTotal);
         
         double doubleGiven = getDoubleTotal(given);
