@@ -65,12 +65,14 @@ public class Main {
 
             switch (choice) {
                 case "1":
+                    ArrayList<Double> oldDenomenations = Money.getAcceptedDenomenations();
                     success = createRegular(newVm);
 
                     if (success) {
                         vm = newVm;
                         im = new InventoryManager(vm);
                     } // do something
+                    else {Money.setDenomenations(oldDenomenations);}
 
                     loop = false;
                     break;
