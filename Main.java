@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.lang.Math;
 
 public class Main {
     private static VendingMachine vm;
