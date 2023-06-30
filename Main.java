@@ -361,6 +361,10 @@ public class Main {
                         System.out.println("\n\t// That item is not available. Try again.");
                     break;
                 case "2":
+                    if(vm.getSelectedSlot() == null) {
+                        System.out.println("\n\tYou have not selected an item yet.");
+                        break;
+                    }
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
@@ -514,6 +518,7 @@ public class Main {
                             System.out.println(e.getMessage());
                         } 
                     } while (!validInput);
+                    break;
                 case "6": // changes calorie content
                     displayItems(vm);
                     validInput = false;
@@ -529,7 +534,7 @@ public class Main {
 
                             if(kcal < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.\n");
 
-                            if (vm.changePrice(kcal, slotNo)) {
+                            if (vm.changeKcal(kcal, slotNo)) {
                                 successMessage("kcal");
                                 validInput = true;
                             } else
@@ -543,13 +548,21 @@ public class Main {
                     } while (!validInput);
                     break;
                 case "7": // collect payment
-                    System.out.println("\n\t* You took out: P" + im.getTotalProfit());
-                    im.setTotalProfit(0);
+                    if(im.getTotalProfit() == 0) {
+                        System.out.println("\n\tYou have not made any profits yet.");
+                    } else {
+                        System.out.println("\n\t* You took out: P" + im.getTotalProfit());
+                        im.setTotalProfit(0);
+                    }
                     break;
                 case "8":
-                    System.out.println("\n\t* You took out: P" + Money.getDoubleTotal(vm.getBankTotal()));
-                    vm.getBankTotal().clearMoney();
-                    im.setTotalProfit(0);
+                    if(Money.getDoubleTotal(vm.getBankTotal()) == 0) {
+                        System.out.println("\n\tThe Vending Machine bank is already empty.");
+                    } else {
+                        System.out.println("\n\t* You took out: P" + Money.getDoubleTotal(vm.getBankTotal()));
+                        vm.getBankTotal().clearMoney();
+                        im.setTotalProfit(0);   
+                    }
                     break;
                 case "9": // replenish money
                     boolean invalid = true;
@@ -572,8 +585,8 @@ public class Main {
                         }
 
                         try {
-                            if (Integer.parseInt(parsedInput[i]) < 0) throw new NumberFormatException();
                             for (int i = 0; i < inputLen; i++) {
+                                if (Integer.parseInt(parsedInput[i]) < 0) throw new NumberFormatException();
                                 tempCassette.insertMoney(
                                         Money.getAcceptedDenominations().get(i),
                                         Integer.parseInt(parsedInput[i]));
@@ -629,7 +642,6 @@ public class Main {
                     break;
             }
         } while (loop);
-
     }
 
     /**
