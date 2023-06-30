@@ -28,7 +28,7 @@ public class Main {
                     create();
                     break;
                 case "2":
-                    if (vm != null && vm.getSlots().size() > vm.minSlots)
+                    if (vm != null && vm.getSlots().size() >= vm.minSlots)
                         features();
                     else
                         System.out.println("\n\tPlease create a Vending Machine first!.");
@@ -522,7 +522,7 @@ public class Main {
                             }
 
                             Money.mergeMoney(vm.getBankTotal(), tempCassette);
-                            System.out.println("You added: P" + Money.getDoubleTotal(tempCassette));
+                            System.out.println("\n\t* You added: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
                         } catch (InputMismatchException e) {
@@ -533,25 +533,31 @@ public class Main {
                     } while (invalid);
                     break;
                 case "8":
-                    System.out.println("\tYour transaction summary since last reset: ");
-                    System.out.printf("\tYour total profit is: P%.2f\n\n", im.getTotalProfit());
-                    System.out.printf("\tCurrent Balance: P%.2f\n\n", Money.getDoubleTotal(vm.getBankTotal()));
+                    System.out.println("\n\t* TRANSACTION SUMMARY (since last reset)");
+                    System.out.printf("\t* Total profit: P%.2f\n", im.getTotalProfit());
+                    System.out.printf("\t* Balance in machine: P%.2f\n\n", Money.getDoubleTotal(vm.getBankTotal()));
                     im.printInventoryLost();
 
                     String[] options3 = { "Reset trackers" };
 
-                    displayOptions(options3, "Back");
+                    invalid = true;
 
-                    choice = sc.nextLine();
+                    do {
+                        displayOptions(options3, "Back");
 
-                    if (!IsInChoices(choice, makeChoices(1, 2))) {
-                        invalidMessage();
-                        continue;
-                    }
+                        choice = sc.nextLine();
+
+                        if (!IsInChoices(choice, makeChoices(1, 2))) {
+                            invalidMessage();
+                            continue;
+                        }
+                        
+                        invalid = false;
+                    } while (invalid);
 
                     switch (choice) {
                         case "1":
-                            System.out.println("\tTrackers reset.");
+                            System.out.println("\n\t* Trackers reset.");
                             im.reconfigure();
                             break;
                         case "2":
@@ -582,12 +588,12 @@ public class Main {
             
             j = pointer;
             for (int i = 0; i < size; i++) {
-                System.out.printf("%-30s", "[" + j + "] " + vm.getSlot(j).getName() + " - P" + vm.getSlot(j).getPrice()); j++;
+                System.out.printf("\t%-30s", "[" + j + "] " + vm.getSlot(j).getName() + " - P" + vm.getSlot(j).getPrice()); j++;
             } 
             System.out.println("\n");
             j = pointer;
             for (int i = 0; i < size; i++) {
-                System.out.printf("%6s left, %-17s", "* " + vm.getSlot(j).getStock(), vm.getSlot(j).getKcal() + " kcal"); j++;
+                System.out.printf("\t%6s left, %-17s", "* " + vm.getSlot(j).getStock(), vm.getSlot(j).getKcal() + " kcal"); j++;
             }
             
             pointer += 4;

@@ -109,7 +109,12 @@ public class InventoryManager {
      */
     public void printInventoryLost() {
         for (Map.Entry<String, Integer> entry : getInventoryLost().entrySet())
-            System.out.println("ITEM: " + entry.getKey() + " STOCK PURCHASED: " + ((entry.getValue() == -1) ? "NEW ITEM" : entry.getValue()));
+            if (entry.getValue() != -1)
+                System.out.println("\t" + (entry.getValue()) + " " + entry.getKey() + " purchased");
+            else 
+                System.out.println("\t(untracked) " + entry.getKey());
+
+        System.out.println("\n\tNote: New items won't be tracked until trackers are reset.");
     }
 
     /**
