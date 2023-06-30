@@ -188,21 +188,6 @@ public class VendingMachine {
     }
 
     /**
-     * Checks if all slots/items in the vending machine are empty (out of stock).
-     *
-     * @param slots the list of slots/items
-     * @return true if all slots are empty, false otherwise
-     */
-    public boolean checkEmpty(ArrayList<Slot> slots) {
-        for (Slot slot : slots) {
-            if (slot.getStock() > 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Checks if the specified slot number is valid.
      *
      * @param slotNo the slot number
