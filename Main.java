@@ -28,10 +28,10 @@ public class Main {
                     create();
                     break;
                 case "2":
-                    if (vm != null || vm.getSlots().size() < 8)
+                    if (vm != null && vm.getSlots().size() > vm.minSlots)
                         features();
                     else
-                        System.out.println("Vending Machine not created yet.");
+                        System.out.println("\nVending Machine not created yet.");
                     break;
                 case "3":
                     loop = false;
@@ -422,7 +422,7 @@ public class Main {
 
                     im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
 
-                    Slot currentSlot = vm.getSlots().get(vm.currentSlotNo);
+                    Slot currentSlot = vm.getSlots().get(vm.getCurrentSlotNo());
                     currentSlot.setStock(currentSlot.getStock() - 1);
                     
                     vm.setSelectedSlot(null);

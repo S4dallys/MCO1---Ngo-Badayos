@@ -8,7 +8,7 @@ public class VendingMachine {
     private ArrayList<Slot> slots = new ArrayList<>();
     private Slot selectedSlot;
     private Money bankTotal;
-    int currentSlotNo;
+    private int currentSlotNo;
     
     final int minSlots = 8;
 
@@ -57,6 +57,14 @@ public class VendingMachine {
         return selectedSlot;
     }
 
+    /**
+     * Returns the selected slot's slot number
+     * 
+     * @return the selected slot's slot number
+     */
+    public int getCurrentSlotNo() {
+        return currentSlotNo;
+    }
     /**
      *  Sets the list of slots/items in the vending machine.
      * 
