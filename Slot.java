@@ -2,60 +2,89 @@ public class Slot {
     private String name;
     private int stock;
     private double price, kcal;
-    private int slotNo;
 
-    final int minStock = 10;
-
-    public Slot(String name, int slotNo) {
-        this.name = name;
-        this.slotNo = slotNo;
-    }
-    
-    public Slot(String name, int stock, double price, double kcal, int slotNo) {
+    /**
+     * Class constructor 
+     */
+    public Slot(String name, int stock, double price, double kcal) {
         this.name = name;
         this.stock = stock;
         this.price = price;
         this.kcal = kcal;
-        this.slotNo = slotNo;
     }
 
-    // copy constructor
+    /**
+     * Class constructor to make a copy
+     */
     public Slot(Slot original) {
         this.name = original.name;
         this.stock = original.stock;
         this.price = original.price;
         this.kcal = original.kcal;
-        this.slotNo = original.slotNo;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getName() {
         return name;
     }
+
+    /**
+     * 
+     * @return
+     */
     public double getPrice() {
         return price;
     }
+    /**
+     * 
+     * @return
+     */
     public int getStock() {
         return stock;
     }
+    /**
+     * 
+     * @return
+     */
     public double getKcal() {
         return kcal;
     }
-    public int getSlotNo() {
-        return slotNo;
-    }
-
+    
+    /**
+     * 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
+    /**
+     * 
+     * @param price
+     */
     public void setPrice(double price) {
         this.price = price;
     }
+    /**
+     * 
+     * @param stock
+     */
     public void setStock(int stock) {
         this.stock = stock;
     }
+    /**
+     * 
+     * @param kcal
+     */
     public void setKcal(double kcal) {
         this.kcal = kcal;
     }
+    /**
+     * 
+     * @return
+     */
     public boolean isAvailable() {
         if(stock == 0)
             return false;

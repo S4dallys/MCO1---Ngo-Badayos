@@ -10,14 +10,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-
-        Money.setDenomenations(new ArrayList<Double>());
-
-        start();
-        sc.close();
-    }
-
-    private static void start() {
+        Money.setDenominations(new ArrayList<Double>());
         boolean loop = true;
         String choice;
         String[] options = { "Create Vending Machine", "Vending Machine Menu" };
@@ -35,7 +28,7 @@ public class Main {
                     create();
                     break;
                 case "2":
-                    if (vm != null)
+                    if (vm != null || vm.getSlots().size() < 8)
                         test();
                     else
                         System.out.println("Vending Machine not created yet.");
@@ -45,6 +38,7 @@ public class Main {
                     break;
             }
         } while (loop);
+        sc.close();
     }
 
     private static VendingMachine create() {
@@ -58,7 +52,7 @@ public class Main {
             displayOptions(options);
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 3))) {
+            if (!IsInChoices(choice, makeChoices(1, 5))) {
                 invalidMessage();
                 continue;
             }
@@ -70,7 +64,7 @@ public class Main {
                     if (success) {
                         vm = newVm;
                         im = new InventoryManager(vm);
-                    } // do something
+                    } 
 
                     loop = false;
                     break;
@@ -195,13 +189,13 @@ public class Main {
                             denominations.add(Double.parseDouble(i));
                         }
                     } catch (InputMismatchException e) {
-                        System.out.println("Invalid denomenations, Try again!");
+                        System.out.println("Invalid denominations, Try again!");
                         continue;
                     }
 
                     denominations = new ArrayList<>(new HashSet<>(denominations));
 
-                    Money.setDenomenations(denominations);
+                    Money.setDenominations(denominations);
                     loop = false;
                 } while (loop);
                 break;
@@ -227,39 +221,41 @@ public class Main {
                 case "1":
                     boolean invalid = true;
                     do {
-                        Slot newSlot;
-
                         try {
                             String name;
                             System.out.println("Item name: ");
                             name = sc.nextLine();
 
-                            newSlot = new Slot(name, slotNo);
-
-                            System.out.println("Item price: ");
-                            newSlot.setPrice(sc.nextDouble());
-
-                            sc.nextLine();
-
+                            int stock;
                             System.out.println("Item stock: ");
-                            newSlot.setStock(sc.nextInt());
-
+                            stock = sc.nextInt();
                             sc.nextLine();
 
+                            if(stock < 10) throw new IllegalArgumentException("You need at least 10 stock to add.\n");
+
+                            double price;
+                            System.out.println("Item price: ");
+                            price = sc.nextDouble();
+                            sc.nextLine();
+
+                            double kcal;
                             System.out.println("Item kcal: ");
-                            newSlot.setKcal(sc.nextDouble());
-
+                            kcal = sc.nextDouble();
                             sc.nextLine();
+
+                            if(stock < 0 || price < 0 || kcal < 0) throw new IllegalArgumentException("Negative values are invalid.\n");
+
+                            vm.addSlot(name, stock, price, kcal);
+                            
+                            invalid = false;
+                            slotNo++;
+
                         } catch (InputMismatchException e) {
                             errorMessage();
                             sc.nextLine();
-                            continue;
-                        }
-
-                        invalid = false;
-
-                        newSlots.add(newSlot);
-                        slotNo++;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } 
                     } while (invalid);
 
                     break;
@@ -268,15 +264,15 @@ public class Main {
                     do {
                         Money tempCassette = new Money();
                         System.out.println(
-                                "Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
-                        System.out.println("Ex. 1 2 3, would mean 1x First Denomenation, 2x Second Denomation, etc.");
+                                "Enter in order of denominations: " + Money.getAcceptedDenominations().toString());
+                        System.out.println("Ex. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
 
                         int inputLen = parsedInput.length;
 
-                        if (inputLen > Money.getAcceptedDenomenations().size()) {
+                        if (inputLen > Money.getAcceptedDenominations().size()) {
                             errorMessage();
                             continue;
                         }
@@ -284,7 +280,7 @@ public class Main {
                         try {
                             for (int i = 0; i < inputLen; i++) {
                                 tempCassette.insertMoney(
-                                        Money.getAcceptedDenomenations().get(i),
+                                        Money.getAcceptedDenominations().get(i),
                                         Integer.parseInt(parsedInput[i]));
                             }
                             newVm.setBankTotal(tempCassette);
@@ -324,8 +320,8 @@ public class Main {
         boolean loop = true, available = true;
         String choice;
         String[] options = { "Pick Item", "Purchase Item" };
-        int slotNo = 0, itemAmt;
-        double totalPayment, payment; // itemAmt is for Special VM
+        int slotNo = 0, itemAmt; // itemAmt is for Special VM
+        double totalPayment, payment; 
         do {
 
             displayOptions(options);
@@ -402,9 +398,12 @@ public class Main {
                     System.out.println("Change: " + Money
                             .calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice())
                             .getMoney());
+
                     im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
+
                     Slot currentSlot = vm.getSlots().get(vm.currentSlotNo);
                     currentSlot.setStock(currentSlot.getStock() - 1);
+                    
                     vm.setSelectedSlot(null);
 
                     // FOR SPECIAL
@@ -429,7 +428,7 @@ public class Main {
         String[] options = { "View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Profit",
                 "Collect All Money", "Replenish Money", "Get Transaction Summary" };
         int stock, slotNo;
-        double price;
+        double price, kcal;
         String itemName;
         do {
             displayOptions(options, "Exit");
@@ -450,11 +449,28 @@ public class Main {
                         try {
                             System.out.print("Enter name of item to add: ");
                             itemName = sc.nextLine();
-                            vm.addSlot(itemName);
+
+                            System.out.print("How many would you like to stock?:");
+                            stock = sc.nextInt();
+                            sc.nextLine();
+
+                            System.out.print("Enter a price to set:");
+                            price = sc.nextDouble();
+                            sc.nextLine();
+
+                            System.out.print("Enter the calores(in kcal) of the item:");
+                            kcal = sc.nextDouble();
+                            sc.nextLine();
+
+                            if(stock < 0 || price < 0 || kcal < 0) throw new IllegalArgumentException("Negative values are invalid.\n");
+
+                            vm.addSlot(itemName, stock, price, kcal);
                             validInput = true;
                         } catch (InputMismatchException e) {
                             errorMessage();
-                        }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } 
                     } while (!validInput);
                     break;
                 case "3": // restocks items. Adds to current amount in stock, not replace
@@ -464,10 +480,12 @@ public class Main {
                             System.out.print("Enter slot number of item to stock:");
                             slotNo = sc.nextInt();
                             sc.nextLine();
-
+                            
                             System.out.print("How many would you like to stock?:");
                             stock = sc.nextInt();
                             sc.nextLine();
+
+                            if(stock < 0) throw new IllegalArgumentException("Negative values are invalid.\n");
 
                             if (vm.stockSlot(stock, slotNo)) {
                                 successMessage("stock");
@@ -477,7 +495,9 @@ public class Main {
                         } catch (InputMismatchException e) {
                             sc.nextLine();
                             errorMessage();
-                        }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } 
                     } while (!validInput);
                     break;
                 case "4": // set price
@@ -492,6 +512,8 @@ public class Main {
                             price = sc.nextDouble();
                             sc.nextLine();
 
+                            if(price < 0) throw new IllegalArgumentException("Negative values are invalid.\n");
+
                             if (vm.priceSlot(price, slotNo)) {
                                 successMessage("price");
                                 validInput = true;
@@ -500,7 +522,9 @@ public class Main {
                         } catch (InputMismatchException e) {
                             sc.nextLine();
                             errorMessage();
-                        }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } 
                     } while (!validInput);
                 case "5": // collect payment
                     System.out.println("You took out: P" + im.getTotalProfit());
@@ -516,16 +540,16 @@ public class Main {
                     validInput = false;
                     do {
                         Money tempCassette = new Money();
-                        System.out.println(
-                                "Enter in order of denominations: " + Money.getAcceptedDenomenations().toString());
-                        System.out.println("Ex. 1 2 3, would mean 1x First Denomenation, 2x Second Denomation, etc.");
+
+                        System.out.println("Enter in order of denominations: " + Money.getAcceptedDenominations().toString());
+                        System.out.println("Ex. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
 
                         int inputLen = parsedInput.length;
 
-                        if (inputLen > Money.getAcceptedDenomenations().size()) {
+                        if (inputLen > Money.getAcceptedDenominations().size()) {
                             errorMessage();
                             continue;
                         }
@@ -533,7 +557,7 @@ public class Main {
                         try {
                             for (int i = 0; i < inputLen; i++) {
                                 tempCassette.insertMoney(
-                                        Money.getAcceptedDenomenations().get(i),
+                                        Money.getAcceptedDenominations().get(i),
                                         Integer.parseInt(parsedInput[i]));
                             }
 
@@ -605,6 +629,7 @@ public class Main {
 
     private static void displayOptions(String[] options) {
         int i = 1;
+        System.out.println();
         for (String option : options) {
             System.out.printf("\t[%d] %s\n", i, option);
             i++;
@@ -615,6 +640,7 @@ public class Main {
 
     private static void displayOptions(String[] options, String last) {
         int i = 1;
+        System.out.println();
         for (String option : options) {
             System.out.printf("\t[%d] %s\n", i, option);
             i++;
@@ -632,7 +658,7 @@ public class Main {
     }
 
     private static void errorMessage() {
-        System.out.println("Error, try again!");
+        System.out.println("Error, try again!\n");
     }
 
     private static void warningMessage() {

@@ -10,47 +10,91 @@ public class VendingMachine {
     
     final int minSlots = 8;
 
+    /**
+     * @param vmName
+     * 
+     */
     public VendingMachine(String vmName) {
         this.vmName = vmName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Money getBankTotal() {
         return bankTotal;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getVmName() {
         return vmName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<Slot> getSlots() {
         return slots;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<Slot> getSelectedSlots() {
         return selectedSlots;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Slot getSelectedSlot() {
         return selectedSlot;
     }
 
+    /**
+     * 
+     * @param
+     */
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
     }
 
+    /**
+     * 
+     * @param
+     */
     public void setBankTotal(Money bankTotal) {
         this.bankTotal = bankTotal;
     }
 
+    /**
+     * 
+     * @param
+     */
     public void setSelectedSlots(ArrayList<Slot> selectedSlots) {
         this.selectedSlots = selectedSlots;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setSelectedSlot(Slot selectedSlot) {
         this.selectedSlot = selectedSlot;
     }
 
-    // user selected slots
+    /**
+     * 
+     * @param slotNo
+     * @param ordered
+     */
     public void addSlot(int slotNo, int ordered) {
         Slot selectedSlot = null;
         Slot originalSlot = getSlot(slotNo);
@@ -73,16 +117,27 @@ public class VendingMachine {
         originalSlot.setStock(originalSlot.getStock() - ordered);
     }
 
+    /**
+     * 
+     */
     public void clearSelected() {
         selectedSlots.clear();
     }
 
-    // slots in machine
-    public void addSlot(String name) {
-        slots.add(new Slot(name, slots.size() + 1));
+    /**
+     * 
+     * @param name
+     */
+    public void addSlot(String name, int stock, double price, double kcal) {
+        slots.add(new Slot(name, stock, price, kcal));
     }
 
-    // adds to slot instead of setting
+    /**
+     * 
+     * @param stock
+     * @param slotNo
+     * @return
+     */
     public boolean stockSlot(int stock, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
@@ -93,6 +148,12 @@ public class VendingMachine {
         }
     }
 
+    /**
+     * 
+     * @param price
+     * @param slotNo
+     * @return
+     */
     public boolean priceSlot(double price, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
@@ -103,6 +164,11 @@ public class VendingMachine {
         }
     }
 
+    /**
+     * 
+     * @param slotNo
+     * @return
+     */
     public Slot getSlot(int slotNo) {
         if (isValidSlot(slotNo)) {
             currentSlotNo = slotNo-1;
@@ -113,6 +179,11 @@ public class VendingMachine {
         }
     }
 
+    /**
+     * 
+     * @param slots
+     * @return
+     */
     public boolean checkEmpty(ArrayList<Slot> slots) {
         for (Slot slot : slots) {
             if (slot.getStock() > 0) {
@@ -122,10 +193,19 @@ public class VendingMachine {
         return true;
     }
 
+    /**
+     * 
+     * @param slotNo
+     * @return
+     */
     private boolean isValidSlot(int slotNo) {
         return slotNo >= 1 && slotNo <= slots.size();
     }
 
+    /**
+     * 
+     * @return
+     */
     public double getTotal() {
         double sum = 0;
         for(Slot slot : selectedSlots) {
@@ -134,6 +214,12 @@ public class VendingMachine {
         return sum;
     }
 
+    /**
+     * 
+     * @param bank
+     * @param denomination
+     * @param stock
+     */
     public void replenishMoney(Money bank, int denomination, int stock) {
         for(int i = 0; i < stock; i++) {
             bank.insertMoney(denomination);
