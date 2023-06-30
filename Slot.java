@@ -1,3 +1,6 @@
+/**
+ * Slot represents the item in the slot as well as its details
+ */
 public class Slot {
     private String name;
     private int stock;
@@ -5,6 +8,11 @@ public class Slot {
 
     /**
      * Class constructor 
+     * 
+     * @param name the name of the item in the slot
+     * @param stock the current stock of the item
+     * @param price the price of the item
+     * @param kcal the calorie content of the item
      */
     public Slot(String name, int stock, double price, double kcal) {
         this.name = name;
@@ -14,7 +22,9 @@ public class Slot {
     }
 
     /**
-     * Class constructor to make a copy
+     * Class constructor to createa copy
+     * 
+     * @param original the original Slot object to be copied
      */
     public Slot(Slot original) {
         this.name = original.name;
@@ -24,66 +34,73 @@ public class Slot {
     }
 
     /**
+     * Returns the name of the item in the slot.
      * 
-     * @return
+     * @return the name of the item
      */
     public String getName() {
         return name;
     }
 
     /**
+     * Returns the price of the item in the slot.
      * 
-     * @return
+     * @return the price of the item
      */
     public double getPrice() {
         return price;
     }
     /**
+     * Returns the current stock of the item in the slot.
      * 
-     * @return
+     * @return the current stock of the item    
      */
     public int getStock() {
         return stock;
     }
     /**
+     * Returns the calorie content of the item in the slot.
      * 
-     * @return
+     * @return the calorie content of the item
      */
     public double getKcal() {
         return kcal;
     }
     
     /**
-     * 
-     * @param name
+     * Sets the name of the item in the slot.
+     * @param name the name of the item
      */
     public void setName(String name) {
         this.name = name;
     }
     /**
+     * Sets the price of the item in the slot.
      * 
-     * @param price
+     * @param price the price of the item
      */
     public void setPrice(double price) {
         this.price = price;
     }
     /**
+     * Sets the current stock of the item in the slot.
      * 
-     * @param stock
+     * @param stock the current stock of the item
      */
     public void setStock(int stock) {
         this.stock = stock;
     }
     /**
-     * 
-     * @param kcal
+     * Sets the calorie content of the item in the slot.
+     * @param kcal the calorie content of the item
      */
     public void setKcal(double kcal) {
         this.kcal = kcal;
     }
     /**
+     * Checks if the item in the slot is available (i.e., the stock is greater than zero).
      * 
-     * @return
+     * @return true if the item is available, false otherwise
      */
     public boolean isAvailable() {
         if(stock == 0)

@@ -1,3 +1,7 @@
+/**
+ * Sample gives a sample Vending Machine to be used for testing
+ */
+
 import java.util.ArrayList;
 
 public class Sample {

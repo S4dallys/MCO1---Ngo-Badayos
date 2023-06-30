@@ -1,11 +1,20 @@
 /**
- * VendingMachine manages the slots/items, and the money in side it
+ * SPECIAL COPY WITH THE METHODS N STUFF
  */
 import java.util.ArrayList;
 
-public class VendingMachine {
+    // USED IN SPECIAL VM MAIN CLASS
+    // public static void displaySelected() {
+    //     for (Slot slot : vm.getSelectedSlots()) {
+    //         System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(),
+    //                 slot.getPrice() * slot.getStock(), slot.getKcal() * slot.getStock());
+    //     }
+    // }
+
+public class SpecialVendingMachine{
     private String vmName;
     private ArrayList<Slot> slots = new ArrayList<>();
+    private ArrayList<Slot> selectedSlots = new ArrayList<>();
     private Slot selectedSlot;
     private Money bankTotal;
     int currentSlotNo;
@@ -13,39 +22,43 @@ public class VendingMachine {
     final int minSlots = 8;
 
     /**
-     * Constructs a VendingMachine object with the specified name.
-     *
-     * @param vmName the name of the vending machine
+     * @param vmName
+     * 
      */
-    public VendingMachine(String vmName) {
+    public SpecialVendingMachine(String vmName) {
         this.vmName = vmName;
     }
 
     /**
-     * Returns the total amount of money in the vending machine's bank
      * 
-     * @return the total amount of money in the bank
+     * @return
      */
     public Money getBankTotal() {
         return bankTotal;
     }
 
     /**
-     * Returns the name of the vending machine.
      * 
-     * @return the name of the vending machine
+     * @return
      */
     public String getVmName() {
         return vmName;
     }
 
     /**
-     * Returns the list of slots/items in the vending machine.
      * 
-     * @return the list of slots/items
+     * @return
      */
     public ArrayList<Slot> getSlots() {
         return slots;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public ArrayList<Slot> getSelectedSlots() {
+        return selectedSlots;
     }
 
     /**
@@ -58,50 +71,85 @@ public class VendingMachine {
     }
 
     /**
-     *  Sets the list of slots/items in the vending machine.
      * 
-     * @param slots the list of slots/items
+     * @param
      */
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
     }
 
     /**
-     * Sets the total amount of money in the vending machine's bank.
      * 
-     * @param bankTotal the total amount of money in the bank
+     * @param
      */
     public void setBankTotal(Money bankTotal) {
         this.bankTotal = bankTotal;
     }
 
     /**
-     * Sets the currently selected slot/item.
      * 
-     * @return selectedSlot the selected slot/item
+     * @param
+     * USED IN SPECIAL VM
+     */
+    public void setSelectedSlots(ArrayList<Slot> selectedSlots) {
+        this.selectedSlots = selectedSlots;
+    }
+
+    /**
+     * 
+     * @return
      */
     public void setSelectedSlot(Slot selectedSlot) {
         this.selectedSlot = selectedSlot;
     }
 
     /**
-     * Adds a new slot/item to the vending machine with the specified details.
-     *
-     * @param name  the name of the item
-     * @param stock the stock/quantity of the item
-     * @param price the price of the item
-     * @param kcal  the calorie content of the item
+     * 
+     * @param slotNo
+     * @param ordered
+     */
+    public void addSlot(int slotNo, int ordered) {
+        Slot selectedSlot = null;
+        Slot originalSlot = getSlot(slotNo);
+
+        for (Slot slot : selectedSlots) {
+            if (slot.getName().equals(originalSlot.getName())) {
+                selectedSlot = slot;
+            }
+        }
+
+        if (selectedSlot == null) {
+            selectedSlot = new Slot(originalSlot);
+            selectedSlots.add(selectedSlot);
+            selectedSlots.get(selectedSlots.size()-1).setStock(ordered);
+        } else {
+            int currentStock = selectedSlot.getStock();
+            selectedSlot.setStock(currentStock + ordered);
+        }
+
+        originalSlot.setStock(originalSlot.getStock() - ordered);
+    }
+
+    /**
+     * Clears selected items 
+     */
+    public void clearSelected() {
+        selectedSlots.clear();
+    }
+
+    /**
+     * 
+     * @param name
      */
     public void addSlot(String name, int stock, double price, double kcal) {
         slots.add(new Slot(name, stock, price, kcal));
     }
 
     /**
-     * Increases the stock/quantity of the item in the specified slot.
-     *
-     * @param stock   the additional stock to be added
-     * @param slotNo  the slot number
-     * @return true if the slot is valid and the stock is successfully added, false otherwise
+     * 
+     * @param stock
+     * @param slotNo
+     * @return
      */
     public boolean stockSlot(int stock, int slotNo) {
         if (isValidSlot(slotNo)) {
@@ -114,11 +162,10 @@ public class VendingMachine {
     }
 
     /**
-     * Increases the stock/quantity of the item in the specified slot.
-     *
-     * @param stock   the additional stock to be added
-     * @param slotNo  the slot number
-     * @return true if the slot is valid and the stock is successfully added, false otherwise
+     * 
+     * @param price
+     * @param slotNo
+     * @return
      */
     public boolean priceSlot(double price, int slotNo) {
         if (isValidSlot(slotNo)) {
@@ -131,10 +178,9 @@ public class VendingMachine {
     }
 
     /**
-     * Returns the slot/item with the specified slot number.
-     *
-     * @param slotNo the slot number
-     * @return the slot/item if the slot is valid, or null otherwise
+     * 
+     * @param slotNo
+     * @return
      */
     public Slot getSlot(int slotNo) {
         if (isValidSlot(slotNo)) {
@@ -147,10 +193,9 @@ public class VendingMachine {
     }
 
     /**
-     * Checks if all slots/items in the vending machine are empty (out of stock).
-     *
-     * @param slots the list of slots/items
-     * @return true if all slots are empty, false otherwise
+     * 
+     * @param slots
+     * @return
      */
     public boolean checkEmpty(ArrayList<Slot> slots) {
         for (Slot slot : slots) {
@@ -162,21 +207,31 @@ public class VendingMachine {
     }
 
     /**
-     * Checks if the specified slot number is valid.
-     *
-     * @param slotNo the slot number
-     * @return true if the slot number is valid, false otherwise
+     * 
+     * @param slotNo
+     * @return
      */
     private boolean isValidSlot(int slotNo) {
         return slotNo >= 1 && slotNo <= slots.size();
     }
 
     /**
-     * Replenishes the vending machine's bank with money of the specified denomination and stock.
-     *
-     * @param bank        the Money object representing the bank
-     * @param denomination the denomination of the money to be replenished
-     * @param stock       the number of units of money to be replenished
+     * 
+     * @return
+     */
+    public double getTotal() {
+        double sum = 0;
+        for(Slot slot : selectedSlots) {
+            sum += slot.getPrice() * slot.getStock();
+        }
+        return sum;
+    }
+
+    /**
+     * 
+     * @param bank
+     * @param denomination
+     * @param stock
      */
     public void replenishMoney(Money bank, int denomination, int stock) {
         for(int i = 0; i < stock; i++) {

@@ -1,4 +1,7 @@
-// VIEW CLASS FOR TRANSCACTION SUMMARY
+/**
+ * InventoryManager is a view class related to the summary of transactions made
+ *                  in the vending machine including the profits
+ */
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -8,7 +11,12 @@ public class InventoryManager {
     private ArrayList<Integer> inventoryStock = new ArrayList<>();
     private VendingMachine vm;
     private double totalProfit = 0;
-    
+
+    /**
+     * Class constructor
+     *
+     * @param vm the VendingMachine object to associate with the InventoryManager
+     */
     public InventoryManager(VendingMachine vm) {
         this.vm = vm;
 
@@ -17,11 +25,19 @@ public class InventoryManager {
         totalProfit = 0;
     }
 
+    /**
+     * Sets the total profit of the vending machine.
+     * @param totalProfit the total profit to set
+     */
     public void setTotalProfit(double totalProfit) {
         this.totalProfit = totalProfit;
     }
 
-    // sets inventory manager to the current snapshot of the vm
+    /**
+     * Reconfigures the inventory manager to match the current snapshot of the vending machine.
+     * This updates the inventory stock and resets the total profit to zero.
+     */
+
     public void reconfigure() {
         this.inventoryStock.clear();
 
@@ -31,6 +47,12 @@ public class InventoryManager {
         totalProfit = 0;
     }
 
+    /**
+     * Reconfigures the inventory manager with a new VendingMachine instance.
+     * This updates the inventory stock, sets the vending machine, and resets the total profit to zero.
+     * 
+     * @param vm the new VendingMachine object to associate with the InventoryManager
+     */
     public void reconfigure(VendingMachine vm) {
         this.inventoryStock.clear();
         this.vm = vm;
@@ -41,14 +63,29 @@ public class InventoryManager {
         totalProfit = 0;
     }
 
+    /**
+     * Returns the VendingMachine object associated with the inventory manager.
+     * @return the VendingMachine object
+     */
     public VendingMachine getVm() {
         return vm;
     }
 
+    /**
+     * Returns the total profit of the vending machine.
+     * 
+     * @return the total profit
+     */
     public double getTotalProfit() {
         return totalProfit;
     }
 
+    /**
+     * Returns a LinkedHashMap containing the inventory loss for each item in the vending machine.
+     * The inventory loss represents the difference between the starting stock and the current stock.
+     *
+     * @return a LinkedHashMap where each key is the item name and the value is the inventory loss
+     */
     public LinkedHashMap<String, Integer> getInventoryLost() {
         LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
 
@@ -66,16 +103,26 @@ public class InventoryManager {
         return result;
     }
 
+    /** 
+     * Prints the inventory loss for each item in the vending machine.
+     * If an item is newly added and has no starting stock, it is marked as "NEW ITEM".
+     */
     public void printInventoryLost() {
         for (Map.Entry<String, Integer> entry : getInventoryLost().entrySet())
             System.out.println("ITEM: " + entry.getKey() + " STOCK PURCHASED: " + ((entry.getValue() == -1) ? "NEW ITEM" : entry.getValue()));
     }
 
+    /**
+     * Prints the starting stock of each item in the vending machine.
+     */
+
     public void printStartingStock() {
         for (int i = 0; i < vm.getSlots().size(); i++)
             System.out.println("ITEM: " + vm.getSlots().get(i).getName() + " STOCK: " + inventoryStock.get(i));
     }
-
+    /**
+     * Prints the current stock of each item in the vending machine.
+     */
     public void printCurrentStock() {
         for (int i = 0; i < vm.getSlots().size(); i++)
             System.out.println("ITEM: " + vm.getSlots().get(i).getName() + " STOCK: " + vm.getSlots().get(i).getStock());

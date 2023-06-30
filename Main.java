@@ -29,7 +29,7 @@ public class Main {
                     break;
                 case "2":
                     if (vm != null || vm.getSlots().size() < 8)
-                        test();
+                        features();
                     else
                         System.out.println("Vending Machine not created yet.");
                     break;
@@ -41,6 +41,9 @@ public class Main {
         sc.close();
     }
 
+    /**
+     * Create Vending Machine menu
+     */
     private static VendingMachine create() {
         VendingMachine newVm = new VendingMachine("Work In Progress");
         boolean loop = true;
@@ -93,8 +96,11 @@ public class Main {
 
         return newVm;
     }
-
-    private static void test() {
+    
+    /**
+     * Vending Machine features menu
+     */
+    private static void features() {
         boolean loop = true;
         String choice;
         String[] options = { "Vending Features", "Maintenance" };
@@ -127,6 +133,9 @@ public class Main {
 
     }
 
+    /**
+     * Initialize new Vending Machine prompts
+     */
     private static boolean initVendingMachine(VendingMachine newVm) {
         String choice;
         boolean invalid = true;
@@ -158,6 +167,9 @@ public class Main {
         return false;
     }
 
+    /**
+     * Creates Regular Vending Machine 
+     */
     private static boolean createRegular(VendingMachine newVm) {
         boolean loop = true;
         int slotNo = 0;
@@ -313,11 +325,17 @@ public class Main {
         return true;
     }
 
+    /**
+     * Creates Special Vending Machine (NOT AVAILABLE)
+     */
     private static boolean createSpecial(VendingMachine newVm) {
         System.out.println("That option is not available at the moment.");
         return false;
     }
 
+    /**
+     * Menu for vending feautures
+     */
     private static void vendingActions() {
         Money userMoney;
         boolean loop = true, available = true;
@@ -425,6 +443,9 @@ public class Main {
 
     }
 
+    /**
+     * Menu for  maintenance feautures
+     */
     private static void maintenance() {
         boolean loop = true, validInput;
         String choice;
@@ -611,6 +632,9 @@ public class Main {
 
     }
 
+    /**
+     * Displays list of items in the Vending Machine
+     */
     public static void displayItems(VendingMachine vm) {
         int i = 0;
         for (Slot slot : vm.getSlots()) {
@@ -623,13 +647,9 @@ public class Main {
         }
     }
 
-    public static void displaySelected() {
-        for (Slot slot : vm.getSelectedSlots()) {
-            System.out.printf("%s - %d ordered - %.2f pesos - %.1f calories\n", slot.getName(), slot.getStock(),
-                    slot.getPrice() * slot.getStock(), slot.getKcal() * slot.getStock());
-        }
-    }
-
+    /**
+     * Displays list of options for a user to pick in a menu
+     */
     private static void displayOptions(String[] options) {
         int i = 1;
         System.out.println();
@@ -641,6 +661,9 @@ public class Main {
         System.out.print("\tPick: ");
     }
 
+    /**
+     * Displays list of options for a user to pick in a menu with a different exit keyword
+     */
     private static void displayOptions(String[] options, String last) {
         int i = 1;
         System.out.println();
@@ -652,26 +675,43 @@ public class Main {
         System.out.print("\tPick: ");
     }
 
+    /**
+     * Displays if a attribute of an item has succesfully been changed.
+     * 
+     * @param changed name of the attribute changed
+     */
     private static void successMessage(String changed) {
         System.out.printf("Successfully changed %s.\n", changed);
     }
 
+    /**
+     * Displays an invalid message if the user picks an outside option
+     */
     private static void invalidMessage() {
         System.out.println("That is not an option. Please try again.");
     }
 
+    /**
+     * Displays an invalid message if the user enters an incorrect value
+     */
     private static void errorMessage() {
         System.out.println("Error, try again!\n");
     }
 
+    /**
+     * Displays an invalid message if the user wishes to exit mid-creation of a Vending Machine
+     */
     private static void warningMessage() {
         System.out.println("Are you sure you want to exit? Your changes will be lost.");
     }
 
-    // public static void displayPrep() {
-
-    // }
-
+    /**
+     * Checks if the input of the user is in the menu choices
+     * 
+     * @param input input of the user
+     * @param choices list of choices to pick
+     * @return true if the input is in choices, false otherwise
+     */
     private static boolean IsInChoices(String input, String[] choices) {
         for (String i : choices)
             if (i.equals(input))
@@ -680,6 +720,12 @@ public class Main {
         return false;
     }
 
+    /**
+     * 
+     * @param start
+     * @param end
+     * @return
+     */
     private static String[] makeChoices(int start, int end) {
         String[] choices = new String[end - start + 1];
 
