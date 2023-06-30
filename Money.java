@@ -45,7 +45,7 @@ public class Money {
      * @return true if the money inserted is a valid bill, false otherwise
      */
     public boolean insertMoney(double amount) {
-        if (!isValidBill(amount)) 
+        if (!acceptedDenominations.contains(amount)) 
             return false;
 
         money.put(amount, money.get(amount) + 1);
@@ -59,7 +59,7 @@ public class Money {
      * @return true if the money inserted is a valid bill, false otherwise
      */
     public boolean insertMoney(double amount, int freq) {
-        if (!isValidBill(amount)) 
+        if (!acceptedDenominations.contains(amount)) 
             return false;
 
         money.put(amount, money.get(amount) + freq);
@@ -72,16 +72,6 @@ public class Money {
     public void clearMoney() {
         for (Map.Entry<Double, Integer> entry : money.entrySet())
             entry.setValue(0);
-    }
-
-    /**
-     * Checks if the entered amount is in the accepted denominations
-     * 
-     * @param amount the user inputted amount to add in denominations
-     * @return true if amount is a valid denominations, false otherwise
-     */
-    private boolean isValidBill(double amount) {
-        return acceptedDenominations.contains(amount);
     }
 
     // 

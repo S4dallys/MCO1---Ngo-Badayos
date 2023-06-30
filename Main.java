@@ -118,12 +118,7 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    if (!vm.checkEmpty(vm.getSlots()))
-                        vendingActions();
-                    else {
-                        System.out.println("\n\tThere are no items at the moment.");
-                        System.out.println("\tPlease try again later.");
-                    }
+                    vendingActions();
                     break;
                 case "2":
                     maintenance();
@@ -332,7 +327,7 @@ public class Main {
                     displayItems(vm);
                     boolean invalid = true;
                     do {
-                        System.out.print("\n\tEnter slot number: ");
+                        System.out.print("\tEnter slot number: ");
                         try {
                             slotNo = sc.nextInt();
                         } catch (Exception e) {
