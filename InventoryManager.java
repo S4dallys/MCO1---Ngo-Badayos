@@ -33,6 +33,10 @@ public class InventoryManager {
         this.totalProfit = totalProfit;
     }
 
+    public ArrayList<Integer> getInventoryStock() {
+        return inventoryStock;
+    }
+
     /**
      * Reconfigures the inventory manager to match the current snapshot of the vending machine.
      * This updates the inventory stock and resets the total profit to zero.

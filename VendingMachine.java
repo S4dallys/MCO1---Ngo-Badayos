@@ -10,7 +10,7 @@ public class VendingMachine {
     private Money bankTotal;
     private int currentSlotNo;
     
-    final int minSlots = 8, minStock = 10;
+    static final int minSlots = 8, minStock = 10;
 
     /**
      * Constructs a VendingMachine object with the specified name.
