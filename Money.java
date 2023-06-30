@@ -38,7 +38,7 @@ public class Money {
     }
     /**
     * Sets the list of accepted denominations for the vending machine.
-    * The denominations are sorted in ascending order.
+    * The denominations are sorted in descending order.
 
     * @param denominations the list of accepted denominations
     */
