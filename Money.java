@@ -1,20 +1,3 @@
-/*  //SHOULD I DELETE THISS????????? //SHOULD I DELETE THISS?????????//SHOULD I DELETE THISS?????????
-//SHOULD I DELETE THISS?????????//SHOULD I DELETE THISS?????????//SHOULD I DELETE THISS?????????
-//SHOULD I DELETE THISS?????????//SHOULD I DELETE THISS?????????//SHOULD I DELETE THISS?????????
-USAGE: 
-1.) !! Declare static Money.setDenominations() first before using class. !!
-2.) calculateTransaction() takes in bankTotal: Money, given: Money, and price: int 
-    NOTE: function always returns a new class 
-    returns given (clone) if a. given is less than price b. VM can't return exact change
-    returns change if all goes well
-3.) insertMoney() returns false if denomination is invalid so no need for extra logic there
-4.) static getDoubleTotal() can be used to get the total monetary value of a money class, probably useful
-5.) clearMoney() sets Money.money to zero, can be used for canceling purchases
-*/ //SHOULD I DELETE THISS?????????
-//SHOULD I DELETE THISS?????????
-//SHOULD I DELETE THISS?????????
-//SHOULD I DELETE THISS?????????
-
 /**
  * Money manages the denominations, calculations, change, and stock of the denominations
  */

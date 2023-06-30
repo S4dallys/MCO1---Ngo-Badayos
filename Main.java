@@ -559,7 +559,7 @@ public class Main {
                     if(Money.getDoubleTotal(vm.getBankTotal()) == 0) {
                         System.out.println("\n\tThe Vending Machine bank is already empty.");
                     } else {
-                        System.out.println("\n\t* You took out: P" + Money.getDoubleTotal(vm.getBankTotal()));
+                        System.out.println("\n\t* You took out: P" + (Money.getDoubleTotal(vm.getBankTotal()) + im.getTotalProfit()));
                         vm.getBankTotal().clearMoney();
                         im.setTotalProfit(0);   
                     }
