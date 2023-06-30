@@ -33,6 +33,10 @@ public class InventoryManager {
         this.totalProfit = totalProfit;
     }
 
+    /**
+     * returns array of inventory stock
+     * @return inventoryStock
+     */
     public ArrayList<Integer> getInventoryStock() {
         return inventoryStock;
     }
@@ -119,21 +123,5 @@ public class InventoryManager {
                 System.out.println("\t(untracked) " + entry.getKey());
 
         System.out.println("\n\tNote: New items won't be tracked until trackers are reset.");
-    }
-
-    /**
-     * Prints the starting stock of each item in the vending machine.
-     */
-
-    public void printStartingStock() {
-        for (int i = 0; i < vm.getSlots().size(); i++)
-            System.out.println("ITEM: " + vm.getSlots().get(i).getName() + " STOCK: " + inventoryStock.get(i));
-    }
-    /**
-     * Prints the current stock of each item in the vending machine.
-     */
-    public void printCurrentStock() {
-        for (int i = 0; i < vm.getSlots().size(); i++)
-            System.out.println("ITEM: " + vm.getSlots().get(i).getName() + " STOCK: " + vm.getSlots().get(i).getStock());
     }
 }

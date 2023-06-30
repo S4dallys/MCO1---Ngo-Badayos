@@ -11,6 +11,10 @@ public class Main {
 
     static Scanner sc = new Scanner(System.in);
 
+    /**
+     * Runs the Vending Machine maker application
+     * @param args args
+     */
     public static void main(String[] args) {
         Money.setDenominations(new ArrayList<Double>());
         boolean loop = true;
@@ -45,6 +49,7 @@ public class Main {
 
     /**
      * Create Vending Machine menu
+     * @return returns the created vending machine
      */
     private static VendingMachine create() {
         VendingMachine newVm = new VendingMachine("Work In Progress");
@@ -133,6 +138,7 @@ public class Main {
 
     /**
      * Initialize new Vending Machine prompts
+     * @param newVm Vending Machine to create
      */
     private static boolean initVendingMachine(VendingMachine newVm) {
         String choice;
@@ -168,6 +174,7 @@ public class Main {
 
     /**
      * Creates Regular Vending Machine 
+     * @param newVm Vending Machine to create 
      */
     private static boolean createRegular(VendingMachine newVm) {
         boolean loop = true;
@@ -641,6 +648,7 @@ public class Main {
 
     /**
      * Displays list of items in the Vending Machine
+     * @param vm Vending Machine to access the slots attribute
      */
     public static void displayItems(VendingMachine vm) {
         int size = 0, pointer = 1, j = 1;
@@ -670,6 +678,7 @@ public class Main {
 
     /**
      * Displays list of items in the Vending Machine
+     * @param newSlots ArrayList of slots
      */
     public static void displayCurrentItems(ArrayList<Slot> newSlots) {
         System.out.print("\n\t~ Current Items: [ ");
@@ -680,6 +689,7 @@ public class Main {
 
     /**
      * Displays list of options for a user to pick in a menu
+     * @param options array of string options to display
      */
     private static void displayOptions(String[] options) {
         int i = 1;
@@ -693,7 +703,9 @@ public class Main {
     }
 
     /**
-     * Displays list of options for a user to pick in a menu with a different exit keyword
+     * Displays list of options for a user to pick in a menu 
+     * @param options array of string options to display
+     * @param last optional: last string to display
      */
     private static void displayOptions(String[] options, String last) {
         int i = 1;
@@ -745,11 +757,11 @@ public class Main {
     }
 
     /**
-     * Description
+     * returns an array of numbers from start to end
      * 
-     * @param start
-     * @param end
-     * @return
+     * @param start starting number
+     * @param end last number
+     * @return string array containing the numbers
      */
     private static String[] makeChoices(int start, int end) {
         String[] choices = new String[end - start + 1];
@@ -762,8 +774,9 @@ public class Main {
     }
 
     /**
-     * 
-     * @return
+     * Prompts the user for creation of a slot object
+     * @param minSlots the minimum amount of slots
+     * @return Slot object
      */
     private static Slot makeSlot(int minSlots) {
         boolean invalid = true;
@@ -806,6 +819,10 @@ public class Main {
         return null;
     }
 
+    /**
+     * Prints change 
+     * @param change money object to print as change
+     */
     private static void printChange(LinkedHashMap<Double, Integer> change) {
         System.out.println("\n\tChange: ");
         for (Map.Entry<Double, Integer> entry : change.entrySet()) {

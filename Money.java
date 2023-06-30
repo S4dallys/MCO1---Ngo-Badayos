@@ -23,7 +23,7 @@ public class Money {
     * Sets the list of accepted denominations for the vending machine.
     * The denominations are sorted in descending order.
 
-    * @param denominations the list of accepted denominations
+    * @param denominations the ArrayList of accepted denominations
     */
     public static void setDenominations(ArrayList<Double> denominations) {
         Collections.sort(denominations, Collections.reverseOrder());
@@ -31,9 +31,9 @@ public class Money {
     }
 
     /**
-     * Returns the hashmap of money
+     * Returns the money attribute as a LinkedHashMap
      * 
-     * @return hashmap of money
+     * @return money
      */
     public LinkedHashMap<Double, Integer> getMoney() {
         return this.money;
@@ -55,7 +55,7 @@ public class Money {
     /**
      * Inserts money into the vending machine
      * @param amount the amount of money to insert
-     * @param freq
+     * @param freq how many of the amount to insert
      * @return true if the money inserted is a valid bill, false otherwise
      */
     public boolean insertMoney(double amount, int freq) {
@@ -67,7 +67,7 @@ public class Money {
     }
 
     /**
-     * 
+     *  Sets all values of the money LinkedHashMap to zero
      */
     public void clearMoney() {
         for (Map.Entry<Double, Integer> entry : money.entrySet())
@@ -76,10 +76,10 @@ public class Money {
 
     // 
     /**
-     * Merges two money classes into dest
+     * Merges two money classes into dest (source is unaffected)
      * 
-     * @param dest
-     * @param source
+     * @param dest destination Money
+     * @param source source Money
      */
     public static void mergeMoney(Money dest, Money source) {
         for (Map.Entry<Double, Integer> entry : source.money.entrySet())
@@ -88,12 +88,11 @@ public class Money {
     }
 
     /**
-     * Returns change as money class if possible. Otherwise returns given back : always returns a new money class
-     * 
-     * @param bankTotal the money in the ATM's cassette
-     * @param given the money the user will pay
+     * Holds the logic for a transaction involving a bank, the money paid, and the price of the item
+     * @param bankTotal the money representing the "bank"
+     * @param given the money representing the money inserted
      * @param price the price of the item to be paid
-     * @return change as money class if possible. Otherwise returns given back : always returns a new money class
+     * @return Returns change as money class if possible. Otherwise returns null 
      */
     public static Money calculateTransaction(Money bankTotal, Money given, double price) {
         Money tempBank = new Money();
@@ -140,7 +139,7 @@ public class Money {
 
     /**
      * Returns total monetary value of money
-     * @param money
+     * @param money money to be converted
      * @return total monetary value of money
      */
     public static double getDoubleTotal(Money money) {
