@@ -242,8 +242,9 @@ public class Main {
                     do {
                         Money tempCassette = new Money();
                         System.out.println(
-                                "Enter in order of denominations: " + Money.getAcceptedDenominations().toString());
-                        System.out.println("Ex. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
+                                "\n\tEnter in order of denominations: " + Money.getAcceptedDenominations().toString());
+                        System.out.println("\tEx. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
+                        System.out.println("\t>> ");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
@@ -262,7 +263,7 @@ public class Main {
                                         Integer.parseInt(parsedInput[i]));
                             }
                             newVm.setBankTotal(tempCassette);
-                            System.out.println("You added: P" + Money.getDoubleTotal(tempCassette));
+                            System.out.println("\n\t* You added: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
                         } catch (InputMismatchException e) {
@@ -292,7 +293,7 @@ public class Main {
      * Creates Special Vending Machine (NOT AVAILABLE)
      */
     private static boolean createSpecial(VendingMachine newVm) {
-        System.out.println("That option is not available at the moment.");
+        System.out.println("\n\t// That option is not available at the moment.");
         return false;
     }
 
@@ -321,7 +322,7 @@ public class Main {
                     displayItems(vm);
                     boolean invalid = true;
                     do {
-                        System.out.print("Enter the slot number of the item you pick: ");
+                        System.out.print("\n\tEnter slot number: ");
                         try {
                             slotNo = sc.nextInt();
                         } catch (Exception e) {
@@ -347,16 +348,16 @@ public class Main {
                         } else
                             available = false;
                     if (!available)
-                        System.out.println("That item is not available. Try again.");
+                        System.out.println("\n\t// That item is not available. Try again.");
                     break;
                 case "2":
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
-                    System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
+                    System.out.printf("\n\tAmount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                     do {
-                        System.out.printf("Payment inserted: %.2f\n", totalPayment);
-                        System.out.print("Insert money to pay: ");
+                        System.out.printf("\tPayment inserted: %.2f\n", totalPayment);
+                        System.out.print("\tInsert money to pay: ");
 
                         try {
                             payment = sc.nextDouble();
@@ -370,7 +371,7 @@ public class Main {
                             errorMessage();
                         }
                     } while (vm.getSelectedSlot().getPrice() > totalPayment);
-                    System.out.println("Change: " + Money
+                    System.out.println("\n\tChange: " + Money
                             .calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice())
                             .getMoney());
 
@@ -535,8 +536,9 @@ public class Main {
                     do {
                         Money tempCassette = new Money();
 
-                        System.out.println("Enter in order of denominations: " + Money.getAcceptedDenominations().toString());
-                        System.out.println("Ex. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
+                        System.out.println("\n\tEnter in order of denominations: " + Money.getAcceptedDenominations().toString());
+                        System.out.println("\tEx. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
+                        System.out.println("\t>> ");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
