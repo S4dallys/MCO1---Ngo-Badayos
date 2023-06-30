@@ -153,6 +153,7 @@ public class Money {
 
     /**
      * Returns accepted denominations
+     * 
      * @return list of acceptedDenominations
      */
     public static ArrayList<Double> getAcceptedDenominations() {
