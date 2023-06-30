@@ -28,7 +28,7 @@ public class Main {
                     create();
                     break;
                 case "2":
-                    if (vm != null && vm.getSlots().size() > vm.minSlots)
+                    if (vm != null && vm.getSlots().size() >= vm.minSlots)
                         features();
                     else
                         System.out.println("\n\tPlease create a Vending Machine first!.");
@@ -304,7 +304,7 @@ public class Main {
         boolean loop = true, available = true;
         String choice;
         String[] options = { "Pick Item", "Purchase Item" };
-        int slotNo = 0, itemAmt; // itemAmt is for Special VM
+        int slotNo = 0;
         double totalPayment, payment; 
         do {
 
@@ -339,15 +339,8 @@ public class Main {
                         invalid = false;
                     } while (invalid);
 
-                    // FOR SPECIAL:
-                    // System.out.print("Enter the amount to be added to your meal: ");
-                    // itemAmt = sc.nextInt();
-                    // sc.nextLine();
                     for (Slot slot : vm.getSlots())
                         if (slot.getName().equals(vm.getSlot(slotNo).getName()) && slot.isAvailable()) {
-                            // FOR SPECIAL:
-                            // vm.addSlot(slotNo, itemAmt);
-                            // displaySelected();
                             vm.setSelectedSlot(vm.getSlot(slotNo));
                             available = true;
                             break;
@@ -360,8 +353,6 @@ public class Main {
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
-                    // FOR SPECIAL
-                    // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
                     System.out.printf("Amount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                     do {
                         System.out.printf("Payment inserted: %.2f\n", totalPayment);
@@ -390,8 +381,6 @@ public class Main {
                     
                     vm.setSelectedSlot(null);
 
-                    // FOR SPECIAL
-                    // vm.clearSelected();
                     loop = false;
                     break;
                 case "3":
@@ -412,7 +401,7 @@ public class Main {
     private static void maintenance() {
         boolean loop = true, validInput;
         String choice;
-        String[] options = { "View Items", "Add Item", "Restock Item", "Set/Change Price", "Collect Profit",
+        String[] options = { "View Items", "Add Item", "Change Item Name", "Restock Item", "Set/Change Price", "Change calorie content", "Collect Profit",
                 "Collect All Money", "Replenish Money", "Get Transaction Summary" };
         int stock, slotNo;
         double price, kcal;
@@ -433,7 +422,25 @@ public class Main {
                 case "2": // add item
                     vm.getSlots().add(makeSlot());
                     break;
-                case "3": // restocks items. Adds to current amount in stock, not replace
+                case "3": // changes Item name
+                    validInput = false;
+                    do {
+                        System.out.print("\n\tEnter slot number of item to stock:");
+                        slotNo = sc.nextInt();
+                        sc.nextLine();
+                        
+                        System.out.print("\tEnter a new name for the item:");
+                        itemName = sc.nextLine();
+
+                        if (vm.changeName(itemName, slotNo)) {
+                            successMessage("name");
+                            validInput = true;
+                        } else
+                            System.out.println("\n\t// Invalid slot number.");
+            
+                    } while (!validInput);
+                    break;
+                case "4": // restocks items. Adds to current amount in stock, not replace
                     validInput = false;
                     do {
                         try {
@@ -447,7 +454,7 @@ public class Main {
 
                             if(stock < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.\n");
 
-                            if (vm.stockSlot(stock, slotNo)) {
+                            if (vm.changeStock(stock, slotNo)) {
                                 successMessage("stock");
                                 validInput = true;
                             } else
@@ -460,7 +467,7 @@ public class Main {
                         } 
                     } while (!validInput);
                     break;
-                case "4": // set price
+                case "5": // set price
                     validInput = false;
                     do {
                         try {
@@ -474,7 +481,7 @@ public class Main {
 
                             if(price < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.\n");
 
-                            if (vm.priceSlot(price, slotNo)) {
+                            if (vm.changePrice(price, slotNo)) {
                                 successMessage("price");
                                 validInput = true;
                             } else
@@ -486,16 +493,43 @@ public class Main {
                             System.out.println(e.getMessage());
                         } 
                     } while (!validInput);
-                case "5": // collect payment
+                case "6": // changes calorie content
+                    validInput = false;
+                    do {
+                        try {
+                            System.out.print("\n\tEnter slot number of item to change price:");
+                            slotNo = sc.nextInt();
+                            sc.nextLine();
+
+                            System.out.print("\tEnter kcal to change to:");
+                            kcal = sc.nextDouble();
+                            sc.nextLine();
+
+                            if(kcal < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.\n");
+
+                            if (vm.changePrice(kcal, slotNo)) {
+                                successMessage("kcal");
+                                validInput = true;
+                            } else
+                                System.out.println("\n\t// Invalid slot number.");
+                        } catch (InputMismatchException e) {
+                            sc.nextLine();
+                            errorMessage();
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } 
+                    } while (!validInput);
+                    break;
+                case "7": // collect payment
                     System.out.println("\n\t* You took out: P" + im.getTotalProfit());
                     im.setTotalProfit(0);
                     break;
-                case "6":
+                case "8":
                     System.out.println("\n\t* You took out: P" + Money.getDoubleTotal(vm.getBankTotal()));
                     vm.getBankTotal().clearMoney();
                     im.setTotalProfit(0);
                     break;
-                case "7": // replenish money
+                case "9": // replenish money
                     boolean invalid = true;
                     validInput = false;
                     do {
@@ -532,7 +566,7 @@ public class Main {
 
                     } while (invalid);
                     break;
-                case "8":
+                case "10":
                     System.out.println("\tYour transaction summary since last reset: ");
                     System.out.printf("\tYour total profit is: P%.2f\n\n", im.getTotalProfit());
                     System.out.printf("\tCurrent Balance: P%.2f\n\n", Money.getDoubleTotal(vm.getBankTotal()));
@@ -557,7 +591,7 @@ public class Main {
                         case "2":
                             break;
                     }
-                case "9":
+                case "11":
                     loop = false;
                     break;
                 default:

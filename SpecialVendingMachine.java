@@ -3,6 +3,21 @@
  */
 import java.util.ArrayList;
 
+    // IN vendingActions() method case "1" after first do while loop
+    // System.out.print("Enter the amount to be added to your meal: ");
+    // itemAmt = sc.nextInt();
+    // sc.nextLine();
+
+    // IN vendingActions() method case "1" inside Slot for loop if statement
+    // vm.addSlot(slotNo, itemAmt);
+    // displaySelected();
+
+    // IN vendingActions() method case "2" after totalPayment = 0
+    // System.out.printf("Total amount to be paid: %.2f\n", vm.getTotal());
+    
+    // IN vendingActions() method case "2" after vm.setSelectedSlot(null);
+    // vm.clearSelected();
+
     // USED IN SPECIAL VM MAIN CLASS
     // public static void displaySelected() {
     //     for (Slot slot : vm.getSelectedSlots()) {

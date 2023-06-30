@@ -105,13 +105,29 @@ public class VendingMachine {
     }
 
     /**
-     * Increases the stock/quantity of the item in the specified slot.
+     * Changes the name of the item in the specified slot.
      *
-     * @param stock   the additional stock to be added
+     * @param name   the name to be changed to
      * @param slotNo  the slot number
-     * @return true if the slot is valid and the stock is successfully added, false otherwise
+     * @return true if the slot is valid and the name is successfully changed, false otherwise
      */
-    public boolean stockSlot(int stock, int slotNo) {
+    public boolean changeName(String name, int slotNo) {
+        if (isValidSlot(slotNo)) {
+            Slot slot = slots.get(slotNo - 1);
+            slot.setName(name);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * Changes the stock/quantity of the item in the specified slot.
+     *
+     * @param stock   the stock to be changed to
+     * @param slotNo  the slot number
+     * @return true if the slot is valid and the stock is successfully changed, false otherwise
+     */
+    public boolean changeStock(int stock, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setStock(slot.getStock() + stock);
@@ -122,16 +138,33 @@ public class VendingMachine {
     }
 
     /**
-     * Increases the stock/quantity of the item in the specified slot.
+     * Changes the price of the item in the specified slot.
      *
-     * @param stock   the additional stock to be added
+     * @param price   the price to be changed to
      * @param slotNo  the slot number
-     * @return true if the slot is valid and the stock is successfully added, false otherwise
+     * @return true if the slot is valid and the s--price is successfully changed, false otherwise
      */
-    public boolean priceSlot(double price, int slotNo) {
+    public boolean changePrice(double price, int slotNo) {
         if (isValidSlot(slotNo)) {
             Slot slot = slots.get(slotNo - 1);
             slot.setPrice(price);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Changes the kcal of the item in the specified slot.
+     *
+     * @param kcal   the kcal to be changed to
+     * @param slotNo  the slot number
+     * @return true if the slot is valid and the kcal is successfully changed, false otherwise
+     */
+    public boolean changeKcal(double kcal, int slotNo) {
+        if (isValidSlot(slotNo)) {
+            Slot slot = slots.get(slotNo - 1);
+            slot.setKcal(kcal);
             return true;
         } else {
             return false;
