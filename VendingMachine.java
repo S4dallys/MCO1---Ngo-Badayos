@@ -10,7 +10,7 @@ public class VendingMachine {
     private Money bankTotal;
     private int currentSlotNo;
     
-    final int minSlots = 8;
+    final int minSlots = 8, minStock = 10;
 
     /**
      * Constructs a VendingMachine object with the specified name.
@@ -121,11 +121,11 @@ public class VendingMachine {
         }
     }
     /**
-     * Changes the stock/quantity of the item in the specified slot.
+     * Adds to the the stock/quantity of the item in the specified slot.
      *
-     * @param stock   the stock to be changed to
+     * @param stock   the stock to be added
      * @param slotNo  the slot number
-     * @return true if the slot is valid and the stock is successfully changed, false otherwise
+     * @return true if the slot is valid and the stock is successfully increased, false otherwise
      */
     public boolean changeStock(int stock, int slotNo) {
         if (isValidSlot(slotNo)) {

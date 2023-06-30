@@ -440,7 +440,7 @@ public class Main {
             
                     } while (!validInput);
                     break;
-                case "4": // restocks items. Adds to current amount in stock, not replace
+                case "4": // restocks items. adds to current amount in stock, not replace
                     validInput = false;
                     do {
                         try {
@@ -721,6 +721,7 @@ public class Main {
     }
 
     /**
+     * Description
      * 
      * @param start
      * @param end
@@ -736,6 +737,10 @@ public class Main {
         return choices;
     }
 
+    /**
+     * 
+     * @return
+     */
     private static Slot makeSlot() {
         boolean invalid = true;
         do {
@@ -749,7 +754,7 @@ public class Main {
                 stock = sc.nextInt();
                 sc.nextLine();
 
-                if(stock < 10) throw new IllegalArgumentException("\n\tYou need at least 10 stock to add.");
+                if(stock < vm.minStock) throw new IllegalArgumentException("\n\tYou need at least 10 stock to add.");
 
                 double price;
                 System.out.print("\n\tItem price: ");
@@ -761,7 +766,7 @@ public class Main {
                 kcal = sc.nextDouble();
                 sc.nextLine();
 
-                if(stock < 0 || price < 0 || kcal < 0) throw new IllegalArgumentException("\n\tNegative values are invalid.");
+                if(stock < 0 || price < 0 || kcal < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.");
                 
                 invalid = false;
                 return new Slot(name, stock, price, kcal);
