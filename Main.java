@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Main {
     private static VendingMachine vm;
@@ -18,7 +20,7 @@ public class Main {
             displayOptions(options, "Exit");
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 3))) {
+            if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -28,10 +30,10 @@ public class Main {
                     create();
                     break;
                 case "2":
-                    if (vm != null && vm.getSlots().size() >= vm.minSlots)
+                    if (vm != null && vm.getSlots().size() >= VendingMachine.minSlots)
                         features();
                     else
-                        System.out.println("\n\tPlease create a Vending Machine first!.");
+                        System.out.println("\n\t// Please create a Vending Machine first!");
                     break;
                 case "3":
                     loop = false;
@@ -55,7 +57,7 @@ public class Main {
             displayOptions(options);
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 5))) {
+            if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -79,16 +81,17 @@ public class Main {
                     loop = false;
                     break;
                 case "3":
-                    System.out.println("\n\tSample Vending Machine Loaded!");
+                    System.out.println("\n\t* Sample Vending Machine Loaded!");
                     vm = Sample.getRegVm();
                     im = new InventoryManager(vm);
                     loop = false;
                     break;
                 case "4":
-                    System.out.println("\n\tThat option is not available at the moment.");
+                    System.out.println("\n\t// That option is not available at the moment.");
                     loop = false;
                     break;
                 case "5":
+                    System.out.println("\n\t* Vending Machine creation canceled.");
                     loop = false;
                     break;
             }
@@ -108,7 +111,7 @@ public class Main {
             displayOptions(options);
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 3))) {
+            if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -146,7 +149,7 @@ public class Main {
 
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 2))) {
+            if (!IsInChoices(choice, makeChoices(1, options1.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -158,6 +161,7 @@ public class Main {
                     newVm = new VendingMachine(name);
                     return true;
                 case "2":
+                    System.out.println("\n\t* Vending Machine creation canceled.");
                     break;
             }
 
@@ -183,7 +187,7 @@ public class Main {
             displayOptions(options1);
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 3))) {
+            if (!IsInChoices(choice, makeChoices(1, options1.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -201,10 +205,12 @@ public class Main {
                     String temp = sc.nextLine();
                     try {
                         for (String i : temp.split(" ")) {
+                            if (Double.parseDouble(i) <= 0) throw new NumberFormatException();
+
                             denominations.add(Double.parseDouble(i));
                         }
-                    } catch (InputMismatchException e) {
-                        System.out.println("\n\tInvalid denominations, Try again!");
+                    } catch (NumberFormatException e) {
+                        System.out.println("\n\t// Invalid denominations, Try again!");
                         continue;
                     }
 
@@ -215,6 +221,7 @@ public class Main {
                 } while (loop);
                 break;
             case "2":
+                System.out.println("\n\t* Vending Machine creation canceled.");
                 return false;
         }
 
@@ -227,24 +234,25 @@ public class Main {
             displayOptions(options2);
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 4))) {
+            if (!IsInChoices(choice, makeChoices(1, options2.length + 1))) {
                 invalidMessage();
                 continue;
             }
 
             switch (choice) {
                 case "1":
-                    newSlots.add(makeSlot());
+                    newSlots.add(makeSlot(VendingMachine.minSlots));
                     slotNo++;
                     break;
                 case "2":
                     boolean invalid = true;
                     do {
                         Money tempCassette = new Money();
+
                         System.out.println(
                                 "\n\tEnter in order of denominations: " + Money.getAcceptedDenominations().toString());
                         System.out.println("\tEx. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
-                        System.out.println("\t>> ");
+                        System.out.print("\t>> ");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
@@ -258,15 +266,16 @@ public class Main {
 
                         try {
                             for (int i = 0; i < inputLen; i++) {
+                                if (Integer.parseInt(parsedInput[i]) < 0) throw new NumberFormatException();
                                 tempCassette.insertMoney(
                                         Money.getAcceptedDenominations().get(i),
                                         Integer.parseInt(parsedInput[i]));
                             }
                             newVm.setBankTotal(tempCassette);
-                            System.out.println("\n\t* You added: P" + Money.getDoubleTotal(tempCassette));
+                            System.out.println("\n\t* Vending Machine now has: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
-                        } catch (InputMismatchException e) {
+                        } catch (NumberFormatException e) {
                             errorMessage();
                             invalid = true;
                         }
@@ -278,11 +287,12 @@ public class Main {
                     if (newSlots.size() >= 8) {
                         newVm.setSlots(newSlots);
                         loop = false;
-                        System.out.println("\n\tItems added! Vending Machine has been created.");
+                        System.out.println("\n\t* Items added! Vending Machine has been created.");
                     } else
-                        System.out.println("\n\tVending Machine needs at least 8 slots.");
+                        System.out.println("\n\t// Vending Machine needs at least 8 slots.");
                     break;
                 case "4":
+                    System.out.println("\n\t* Vending Machine creation canceled.");
                     return false;
             }
         } while (loop);
@@ -309,10 +319,10 @@ public class Main {
         double totalPayment, payment; 
         do {
 
-            displayOptions(options);
+            displayOptions(options, "Back");
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 3))) {
+            if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -371,9 +381,9 @@ public class Main {
                             errorMessage();
                         }
                     } while (vm.getSelectedSlot().getPrice() > totalPayment);
-                    System.out.println("\n\tChange: " + Money
-                            .calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice())
-                            .getMoney());
+                    LinkedHashMap<Double, Integer> change = Money.calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice()).getMoney();
+
+                    printChange(change);
 
                     im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
 
@@ -411,7 +421,7 @@ public class Main {
             displayOptions(options, "Exit");
             choice = sc.nextLine();
 
-            if (!IsInChoices(choice, makeChoices(1, 9))) {
+            if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
                 invalidMessage();
                 continue;
             }
@@ -421,16 +431,17 @@ public class Main {
                     displayItems(vm);
                     break;
                 case "2": // add item
-                    vm.getSlots().add(makeSlot());
+                    vm.getSlots().add(makeSlot(VendingMachine.minSlots));
                     break;
                 case "3": // changes Item name
                     validInput = false;
+                    displayItems(vm);
                     do {
-                        System.out.print("\n\tEnter slot number of item to stock:");
+                        System.out.print("\n\tEnter slot number: ");
                         slotNo = sc.nextInt();
                         sc.nextLine();
                         
-                        System.out.print("\tEnter a new name for the item:");
+                        System.out.print("\tEnter new name: ");
                         itemName = sc.nextLine();
 
                         if (vm.changeName(itemName, slotNo)) {
@@ -442,20 +453,28 @@ public class Main {
                     } while (!validInput);
                     break;
                 case "4": // restocks items. adds to current amount in stock, not replace
+                    displayItems(vm);
                     validInput = false;
                     do {
                         try {
-                            System.out.print("\n\tEnter slot number of item to stock:");
+                            System.out.print("\n\tEnter slot number: ");
                             slotNo = sc.nextInt();
                             sc.nextLine();
                             
-                            System.out.print("\tHow many would you like to stock?:");
+                            System.out.print("\tEnter amount to add: ");
                             stock = sc.nextInt();
                             sc.nextLine();
 
                             if(stock < 0) throw new IllegalArgumentException("\n\t// Negative values are invalid.\n");
 
                             if (vm.changeStock(stock, slotNo)) {
+                                try {
+                                    im.getInventoryStock().set(
+                                        slotNo - 1, im.getInventoryStock().get(slotNo - 1) + stock
+                                    );
+                                } catch (Exception e) { // do nothing 
+                                }
+
                                 successMessage("stock");
                                 validInput = true;
                             } else
@@ -469,14 +488,15 @@ public class Main {
                     } while (!validInput);
                     break;
                 case "5": // set price
+                    displayItems(vm);
                     validInput = false;
                     do {
                         try {
-                            System.out.print("\n\tEnter slot number of item to change price:");
+                            System.out.print("\n\tEnter slot number: ");
                             slotNo = sc.nextInt();
                             sc.nextLine();
 
-                            System.out.print("\tEnter a price to set:");
+                            System.out.print("\tEnter new price: ");
                             price = sc.nextDouble();
                             sc.nextLine();
 
@@ -495,14 +515,15 @@ public class Main {
                         } 
                     } while (!validInput);
                 case "6": // changes calorie content
+                    displayItems(vm);
                     validInput = false;
                     do {
                         try {
-                            System.out.print("\n\tEnter slot number of item to change price:");
+                            System.out.print("\n\tEnter slot number: ");
                             slotNo = sc.nextInt();
                             sc.nextLine();
 
-                            System.out.print("\tEnter kcal to change to:");
+                            System.out.print("\tEnter new kcal: ");
                             kcal = sc.nextDouble();
                             sc.nextLine();
 
@@ -538,7 +559,7 @@ public class Main {
 
                         System.out.println("\n\tEnter in order of denominations: " + Money.getAcceptedDenominations().toString());
                         System.out.println("\tEx. 1 2 3, would mean 1x First Denomination, 2x Second Denomation, etc.");
-                        System.out.println("\t>> ");
+                        System.out.print("\t>> ");
 
                         String input = sc.nextLine();
                         String parsedInput[] = input.split(" ");
@@ -551,6 +572,7 @@ public class Main {
                         }
 
                         try {
+                            if (Integer.parseInt(parsedInput[i]) < 0) throw new NumberFormatException();
                             for (int i = 0; i < inputLen; i++) {
                                 tempCassette.insertMoney(
                                         Money.getAcceptedDenominations().get(i),
@@ -561,7 +583,7 @@ public class Main {
                             System.out.println("\n\t* You added: P" + Money.getDoubleTotal(tempCassette));
 
                             invalid = false;
-                        } catch (InputMismatchException e) {
+                        } catch (NumberFormatException e) {
                             errorMessage();
                             invalid = true;
                         }
@@ -583,7 +605,7 @@ public class Main {
 
                         choice = sc.nextLine();
 
-                        if (!IsInChoices(choice, makeChoices(1, 2))) {
+                        if (!IsInChoices(choice, makeChoices(1, options3.length + 1))) {
                             invalidMessage();
                             continue;
                         }
@@ -616,7 +638,7 @@ public class Main {
     public static void displayItems(VendingMachine vm) {
         int size = 0, pointer = 1, j = 1;
 
-        System.out.println();
+        System.out.println("\n\t* VENDING MACHINE - " + vm.getVmName() + " - - - - - - - - - -\n");
      
         while (pointer <= vm.getSlots().size()) {
             size = Math.min(4, vm.getSlots().size() - j + 1);
@@ -633,7 +655,7 @@ public class Main {
             }
             
             pointer += 4;
-            System.out.println("\n\n");
+            System.out.println("\n");
         }
 
         
@@ -645,7 +667,7 @@ public class Main {
     public static void displayCurrentItems(ArrayList<Slot> newSlots) {
         System.out.print("\n\t~ Current Items: [ ");
         for (Slot slot : newSlots) 
-            System.out.printf("%s ", slot.getName());
+            System.out.printf("%s, ", slot.getName());
         System.out.print("] ~");
     }
 
@@ -683,14 +705,14 @@ public class Main {
      * @param changed name of the attribute changed
      */
     private static void successMessage(String changed) {
-        System.out.printf("\n\t~ Successfully changed %s.\n", changed);
+        System.out.printf("\n\t* Successfully changed %s.\n", changed);
     }
 
     /**
      * Displays an invalid message if the user picks an outside option
      */
     private static void invalidMessage() {
-        System.out.println("\n\tThat is not an option. Please try again.");
+        System.out.println("\n\t// That is not an option. Please try again.");
     }
 
     /**
@@ -736,7 +758,7 @@ public class Main {
      * 
      * @return
      */
-    private static Slot makeSlot() {
+    private static Slot makeSlot(int minSlots) {
         boolean invalid = true;
         do {
             try {
@@ -749,7 +771,7 @@ public class Main {
                 stock = sc.nextInt();
                 sc.nextLine();
 
-                if(stock < vm.minStock) throw new IllegalArgumentException("\n\tYou need at least 10 stock to add.");
+                if(stock < minSlots) throw new IllegalArgumentException("\n\tYou need at least 10 stock to add.");
 
                 double price;
                 System.out.print("\n\tItem price: ");
@@ -775,6 +797,14 @@ public class Main {
         } while (invalid);
 
         return null;
+    }
+
+    private static void printChange(LinkedHashMap<Double, Integer> change) {
+        System.out.println("\n\tChange: ");
+        for (Map.Entry<Double, Integer> entry : change.entrySet()) {
+            if (entry.getValue() != 0)
+            System.out.print("\t\t" + entry.getValue() + "x P" + entry.getKey() + "\n");
+        }
     }
 }
 
