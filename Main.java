@@ -701,13 +701,6 @@ public class Main {
     }
 
     /**
-     * Displays an invalid message if the user wishes to exit mid-creation of a Vending Machine
-     */
-    private static void warningMessage() {
-        System.out.println("\n\t// Are you sure you want to exit? Your changes will be lost.");
-    }
-
-    /**
      * Checks if the input of the user is in the menu choices
      * 
      * @param input input of the user
