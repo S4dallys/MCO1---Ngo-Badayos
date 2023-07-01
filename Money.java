@@ -137,6 +137,11 @@ public class Money {
         return result;
     }
 
+    /**
+     * Subtracts the amount of divisor from a money class
+     * @param bankTotal the money to subtract from
+     * @param divisor the amount to remove
+     */
     public static void subtractMoney(Money bankTotal, double divisor) {
         Money result = new Money();
         for (Map.Entry<Double, Integer> entry : bankTotal.money.entrySet()) {
