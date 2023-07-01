@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.lang.Math;
 
 public class Main {
     private static VendingMachine vm;
@@ -12,10 +11,6 @@ public class Main {
 
     static Scanner sc = new Scanner(System.in);
 
-    /**
-     * Runs the Vending Machine maker application
-     * @param args args
-     */
     public static void main(String[] args) {
         Money.setDenominations(new ArrayList<Double>());
         boolean loop = true;
@@ -50,7 +45,6 @@ public class Main {
 
     /**
      * Create Vending Machine menu
-     * @return returns the created vending machine
      */
     private static VendingMachine create() {
         VendingMachine newVm = new VendingMachine("Work In Progress");
@@ -114,7 +108,7 @@ public class Main {
         String choice;
         String[] options = { "Vending Features", "Maintenance" };
         do {
-            displayOptions(options, "Back");
+            displayOptions(options);
             choice = sc.nextLine();
 
             if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
@@ -139,7 +133,6 @@ public class Main {
 
     /**
      * Initialize new Vending Machine prompts
-     * @param newVm Vending Machine to create
      */
     private static boolean initVendingMachine(VendingMachine newVm) {
         String choice;
@@ -175,7 +168,6 @@ public class Main {
 
     /**
      * Creates Regular Vending Machine 
-     * @param newVm Vending Machine to create 
      */
     private static boolean createRegular(VendingMachine newVm) {
         boolean loop = true;
@@ -371,7 +363,7 @@ public class Main {
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
-                    System.out.printf("\n\t* Amount to be paid: %.2f\n\n", vm.getSelectedSlot().getPrice());
+                    System.out.printf("\n\tAmount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
                     do {
                         System.out.printf("\tPayment inserted: %.2f\n", totalPayment);
                         System.out.print("\tInsert money to pay: ");
@@ -388,20 +380,15 @@ public class Main {
                             errorMessage();
                         }
                     } while (vm.getSelectedSlot().getPrice() > totalPayment);
+                    LinkedHashMap<Double, Integer> change = Money.calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice()).getMoney();
 
-                    // Money.mergeMoney(vm.getBankTotal(), userMoney);
-                    Money change = Money.calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice());
-                    if (Money.getDoubleTotal(userMoney) == Money.getDoubleTotal(change)) {
-                        System.out.println("\n\t// Sorry! Vending Machine cannot give exact change.\n\t// Returning money.");
-                    }
-                    else {
-                        im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
-                        Slot currentSlot = vm.getSlots().get(vm.getCurrentSlotNo());
-                        currentSlot.setStock(currentSlot.getStock() - 1);
-                    }
+                    printChange(change);
 
-                    printChange(change.getMoney());
+                    im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
 
+                    Slot currentSlot = vm.getSlots().get(vm.getCurrentSlotNo());
+                    currentSlot.setStock(currentSlot.getStock() - 1);
+                    
                     vm.setSelectedSlot(null);
 
                     loop = false;
@@ -430,7 +417,7 @@ public class Main {
         double price, kcal;
         String itemName;
         do {
-            displayOptions(options, "Back");
+            displayOptions(options, "Exit");
             choice = sc.nextLine();
 
             if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
@@ -560,7 +547,6 @@ public class Main {
                         System.out.println("\n\tYou have not made any profits yet.");
                     } else {
                         System.out.println("\n\t* You took out: P" + im.getTotalProfit());
-                        Money.subtractMoney(vm.getBankTotal(), im.getTotalProfit());
                         im.setTotalProfit(0);
                     }
                     break;
@@ -568,7 +554,7 @@ public class Main {
                     if(Money.getDoubleTotal(vm.getBankTotal()) == 0) {
                         System.out.println("\n\tThe Vending Machine bank is already empty.");
                     } else {
-                        System.out.println("\n\t* You took out: P" + (Money.getDoubleTotal(vm.getBankTotal())));
+                        System.out.println("\n\t* You took out: P" + (Money.getDoubleTotal(vm.getBankTotal()) + im.getTotalProfit()));
                         vm.getBankTotal().clearMoney();
                         im.setTotalProfit(0);   
                     }
@@ -655,7 +641,6 @@ public class Main {
 
     /**
      * Displays list of items in the Vending Machine
-     * @param vm Vending Machine to access the slots attribute
      */
     public static void displayItems(VendingMachine vm) {
         int size = 0, pointer = 1, j = 1;
@@ -685,7 +670,6 @@ public class Main {
 
     /**
      * Displays list of items in the Vending Machine
-     * @param newSlots ArrayList of slots
      */
     public static void displayCurrentItems(ArrayList<Slot> newSlots) {
         System.out.print("\n\t~ Current Items: [ ");
@@ -696,7 +680,6 @@ public class Main {
 
     /**
      * Displays list of options for a user to pick in a menu
-     * @param options array of string options to display
      */
     private static void displayOptions(String[] options) {
         int i = 1;
@@ -710,9 +693,7 @@ public class Main {
     }
 
     /**
-     * Displays list of options for a user to pick in a menu 
-     * @param options array of string options to display
-     * @param last optional: last string to display
+     * Displays list of options for a user to pick in a menu with a different exit keyword
      */
     private static void displayOptions(String[] options, String last) {
         int i = 1;
@@ -764,11 +745,11 @@ public class Main {
     }
 
     /**
-     * returns an array of numbers from start to end
+     * Description
      * 
-     * @param start starting number
-     * @param end last number
-     * @return string array containing the numbers
+     * @param start
+     * @param end
+     * @return
      */
     private static String[] makeChoices(int start, int end) {
         String[] choices = new String[end - start + 1];
@@ -781,9 +762,8 @@ public class Main {
     }
 
     /**
-     * Prompts the user for creation of a slot object
-     * @param minSlots the minimum amount of slots
-     * @return Slot object
+     * 
+     * @return
      */
     private static Slot makeSlot(int minSlots) {
         boolean invalid = true;
@@ -826,10 +806,6 @@ public class Main {
         return null;
     }
 
-    /**
-     * Prints change 
-     * @param change money object to print as change
-     */
     private static void printChange(LinkedHashMap<Double, Integer> change) {
         System.out.println("\n\tChange: ");
         for (Map.Entry<Double, Integer> entry : change.entrySet()) {

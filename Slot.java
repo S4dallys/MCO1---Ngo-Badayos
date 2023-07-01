@@ -22,7 +22,7 @@ public class Slot {
     }
 
     /**
-     * Class constructor to createa copy
+     * Class constructor to create a copy
      * 
      * @param original the original Slot object to be copied
      */
@@ -69,6 +69,7 @@ public class Slot {
     
     /**
      * Sets the name of the item in the slot.
+     * 
      * @param name the name of the item
      */
     public void setName(String name) {
