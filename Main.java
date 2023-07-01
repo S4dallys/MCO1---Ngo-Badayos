@@ -114,7 +114,7 @@ public class Main {
         String choice;
         String[] options = { "Vending Features", "Maintenance" };
         do {
-            displayOptions(options);
+            displayOptions(options, "Back");
             choice = sc.nextLine();
 
             if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
@@ -371,7 +371,7 @@ public class Main {
                     userMoney = new Money();
                     payment = 0;
                     totalPayment = 0;
-                    System.out.printf("\n\tAmount to be paid: %.2f\n", vm.getSelectedSlot().getPrice());
+                    System.out.printf("\n\t* Amount to be paid: %.2f\n\n", vm.getSelectedSlot().getPrice());
                     do {
                         System.out.printf("\tPayment inserted: %.2f\n", totalPayment);
                         System.out.print("\tInsert money to pay: ");
@@ -388,15 +388,20 @@ public class Main {
                             errorMessage();
                         }
                     } while (vm.getSelectedSlot().getPrice() > totalPayment);
-                    LinkedHashMap<Double, Integer> change = Money.calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice()).getMoney();
 
-                    printChange(change);
+                    // Money.mergeMoney(vm.getBankTotal(), userMoney);
+                    Money change = Money.calculateTransaction(vm.getBankTotal(), userMoney, vm.getSelectedSlot().getPrice());
+                    if (Money.getDoubleTotal(userMoney) == Money.getDoubleTotal(change)) {
+                        System.out.println("\n\t// Sorry! Vending Machine cannot give exact change.\n\t// Returning money.");
+                    }
+                    else {
+                        im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
+                        Slot currentSlot = vm.getSlots().get(vm.getCurrentSlotNo());
+                        currentSlot.setStock(currentSlot.getStock() - 1);
+                    }
 
-                    im.setTotalProfit(im.getTotalProfit()+vm.getSelectedSlot().getPrice());
+                    printChange(change.getMoney());
 
-                    Slot currentSlot = vm.getSlots().get(vm.getCurrentSlotNo());
-                    currentSlot.setStock(currentSlot.getStock() - 1);
-                    
                     vm.setSelectedSlot(null);
 
                     loop = false;
@@ -425,7 +430,7 @@ public class Main {
         double price, kcal;
         String itemName;
         do {
-            displayOptions(options, "Exit");
+            displayOptions(options, "Back");
             choice = sc.nextLine();
 
             if (!IsInChoices(choice, makeChoices(1, options.length + 1))) {
@@ -555,6 +560,7 @@ public class Main {
                         System.out.println("\n\tYou have not made any profits yet.");
                     } else {
                         System.out.println("\n\t* You took out: P" + im.getTotalProfit());
+                        Money.subtractMoney(vm.getBankTotal(), im.getTotalProfit());
                         im.setTotalProfit(0);
                     }
                     break;
@@ -562,7 +568,7 @@ public class Main {
                     if(Money.getDoubleTotal(vm.getBankTotal()) == 0) {
                         System.out.println("\n\tThe Vending Machine bank is already empty.");
                     } else {
-                        System.out.println("\n\t* You took out: P" + (Money.getDoubleTotal(vm.getBankTotal()) + im.getTotalProfit()));
+                        System.out.println("\n\t* You took out: P" + (Money.getDoubleTotal(vm.getBankTotal())));
                         vm.getBankTotal().clearMoney();
                         im.setTotalProfit(0);   
                     }

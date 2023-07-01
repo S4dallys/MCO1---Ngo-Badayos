@@ -196,17 +196,4 @@ public class VendingMachine {
     private boolean isValidSlot(int slotNo) {
         return slotNo >= 1 && slotNo <= slots.size();
     }
-
-    /**
-     * Replenishes the vending machine's bank with money of the specified denomination and stock.
-     *
-     * @param bank        the Money object representing the bank
-     * @param denomination the denomination of the money to be replenished
-     * @param stock       the number of units of money to be replenished
-     */
-    public void replenishMoney(Money bank, int denomination, int stock) {
-        for(int i = 0; i < stock; i++) {
-            bank.insertMoney(denomination);
-        }
-    }
 }

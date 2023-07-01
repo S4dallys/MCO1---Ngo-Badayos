@@ -101,12 +101,11 @@ public class Money {
         
         mergeMoney(result, given);
         mergeMoney(tempBank, bankTotal);
+        mergeMoney(tempBank, given);
         
         double doubleGiven = getDoubleTotal(given);
 
-        // if given is less than price or vending machine doesn't have enough money
-        if (doubleGiven < price) return result; 
-        else if (doubleGiven - price == 0) {
+        if (doubleGiven - price == 0) {
             mergeMoney(bankTotal, given);
             result.clearMoney(); 
             return result;
@@ -122,7 +121,7 @@ public class Money {
             if (bill <= change && quantity > 0) {
                 int numBills = (int) Math.min(quantity, change / bill);
                 change -= bill * numBills;
-                tempBank.money.put(bill, quantity - numBills);
+                tempBank.money.put(bill, quantity - numBills); 
                 result.money.put(bill, numBills);
             }
         }
@@ -136,6 +135,21 @@ public class Money {
 
         bankTotal.money = tempBank.money;
         return result;
+    }
+
+    public static void subtractMoney(Money bankTotal, double divisor) {
+        Money result = new Money();
+        for (Map.Entry<Double, Integer> entry : bankTotal.money.entrySet()) {
+            double bill = entry.getKey();
+            int quantity = entry.getValue();
+
+            if (bill <= divisor && quantity > 0) {
+                int numBills = (int) Math.min(quantity, divisor / bill);
+                divisor -= bill * numBills;
+                bankTotal.money.put(bill, quantity - numBills);
+                result.money.put(bill, numBills);
+            }
+        }
     }
 
     /**
